@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>台北市政府 2016 預算 - 圓形縮放圖</title>
+  <script src="d3.v3.min.js"></script>
+  <style>
+  .node {
+    cursor: pointer;
+  }
+  
+  .node:hover {
+    stroke: #000;
+    stroke-width: 1.5px;
+  }
+  
+  .node--leaf {
+    fill: white;
+  }
+  
+  .label {
+    font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-anchor: middle;
+    text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+  }
+  
+  .label,
+  .node--root,
+  .node--leaf {
+    pointer-events: none;
+  }
+  </style>
+</head>
+
+<body>
+  <script>
+  d3.csv("tpe2016.csv", function(error, data) {
+    if (error) {
+      console.log('no');
+    } else {
+      //console.log(data);
+      var a = data.map(function(d) {
+        return {
+          amount: d.amount * 1 / 100000000,
+          key: d.cat,
+          category: d.category
+        }
+      });
+      console.log(a);
+      //console.log(a);
+      var b = d3.nest()
+        .key(function(d) {
+          return d.key;
+        })
+        .key(function(d) {
+          return d.category;
+        })
+        .rollup(function(d) {
+          return d3.sum(d, function(dd) {
+            return dd.amount;
+          });
+        })
+        .entries(a);
+      var c = d3.nest()
+        .key(function(d) {
+          return d.key;
+        })
+        .rollup(function(d) {
+          return d3.sum(d, function(dd) {
+            return dd.amount;
+          });
+        })
+        .entries(a);
+      var d = {};
+      d.name = 'flare';
+      d.children = [];
+      for (var i = 0; i < b.length; i++) {
+        d.children[i] = {};
+        d.children[i].name = b[i].key;
+        d.children[i].sum = c[i].values;
+        d.children[i].children = [];
+        for (var j = 0; j < b[i].values.length; j++) {
+          d.children[i].children[j] = {};
+          d.children[i].children[j].name = b[i].values[j].key;
+          d.children[i].children[j].size = b[i].values[j].values;
+          d.children[i].children[j].sum = b[i].values[j].values;
+        }
+      }
+      console.log(d);
+      qq(d);
+
+    }
+
+    function qq(root) {
+      var margin = 20,
+        diameter = 660;
+
+      var color = d3.scale.linear()
+        .domain([-1, 5])
+        .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+        .interpolate(d3.interpolateHcl);
+
+      var pack = d3.layout.pack()
+        .padding(2)
+        .size([diameter - margin, diameter - margin])
+        .value(function(d) {
+          return d.size;
+        })
+
+      var svg = d3.select("body").append("svg")
+        .attr("width", diameter)
+        .attr("height", diameter)
+        .append("g")
+        .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+      var focus = root,
+        nodes = pack.nodes(root),
+        view;
+
+      var circle = svg.selectAll("circle")
+        .data(nodes)
+        .enter().append("circle")
+        .attr("class", function(d) {
+          return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root";
+        })
+        .style("fill", function(d) {
+          return d.children ? color(d.depth) : null;
+        })
+        .on("click", function(d) {
+          if (focus !== d) zoom(d), d3.event.stopPropagation();
+        });
+
+      var text = svg.selectAll("text")
+        .data(nodes)
+        .enter().append("text")
+        .attr("class", "label")
+        .style("fill-opacity", function(d) {
+          return d.parent === root ? 1 : 0;
+        })
+        .style("display", function(d) {
+          return d.parent === root ? "inline" : "none";
+        })
+        .text(function(d) {
+          return d.name;
+        });
+
+      var node = svg.selectAll("circle,text");
+
+      d3.select("body")
+        .style("background", color(-1))
+        .on("click", function() {
+          zoom(root);
+        });
+
+      zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+      function zoom(d) {
+        var focus0 = focus;
+        focus = d;
+
+        var transition = d3.transition()
+          .duration(d3.event.altKey ? 7500 : 750)
+          .tween("zoom", function(d) {
+            var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+            return function(t) {
+              zoomTo(i(t));
+            };
+          });
+
+        transition.selectAll("text")
+          .filter(function(d) {
+            return d.parent === focus || this.style.display === "inline";
+          })
+          .style("fill-opacity", function(d) {
+            return d.parent === focus ? 1 : 0;
+          })
+          .each("start", function(d) {
+            if (d.parent === focus) this.style.display = "inline";
+          })
+          .each("end", function(d) {
+            if (d.parent !== focus) this.style.display = "none";
+          });
+      }
+
+      function zoomTo(v) {
+        var k = diameter / v[2];
+        view = v;
+        node.attr("transform", function(d) {
+          return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")";
+        });
+        circle.attr("r", function(d) {
+          return d.r * k;
+        });
+      }
+
+      d3.select(self.frameElement).style("height", diameter + "px");
+
+    }
+  });
+  </script>
+</body>
+
+</html>
