@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>無臉人</title>
+  <script src="webduino-all.min.js"></script>
+  <script src="webduino-blockly.js"></script>
+  <script>
+  window.addEventListener('load', function() {
+    var f = document.getElementById('f');
+    var i = document.getElementById('i');
+    var b = document.getElementById('b');
+    var ultrasonic;
+    b.onclick = function() {
+      boardReady({
+        device: i.value,
+        multi: true
+      }, function(board) {
+        f.style.display = 'block';
+        ultrasonic = getUltrasonic(board, 11, 10);
+        ultrasonic.ping(function(cm) {
+          console.log(cm);
+          if (cm >= 89) {
+            faceOff(89);
+          } else {
+            faceOff(cm);
+          }
+        }, 300);
+      });
+    };
+
+    function faceOff(val) {
+      var x = -1 * (480 * (val % 10));
+      var y = -1 * (640 * (Math.floor(val / 10)));
+      f.style.backgroundPosition = x + 'px ' + y + 'px';
+    }
+
+
+  }, false);
+  </script>
+  <style>
+  body {
+    background: #000;
+  }
+  input, button{
+  	padding:2px 5px;
+  	background:rgba(255,255,255,.2);
+  	color:#999;
+  	outline:none;
+  	border:none;
+  	transition:.3s;
+  }
+  input:focus, button:hover{
+  	background:rgba(255,255,255,.3);
+  }
+  input{
+  	width:40px;
+  	height:20px;
+  }
+  button{
+  	cursor:pointer;
+  	height:25px;
+  }
+  #f {
+    display: none;
+    width: 480px;
+    height: 640px;
+    margin: 0 auto;
+    background-image: url(no-face-man.jpg);
+    background-position: 0 0;
+  }
+  </style>
+</head>
+
+<body>
+  <input id="i" type="text" value="OVXD">
+  <button id="b">></button>
+  <div id="f"></div>
+</body>
+
+</html>
