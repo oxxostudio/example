@@ -6,10 +6,13 @@
 	<style>
 		img{
 			width:100%;
+			max-width:100px;
 		}
-		div{
-			width:100%;
-			max-width:800px;
+		div div{
+			display:inline-block;
+			max-width:200px;
+			vertical-align: bottom;
+			margin: 30px;
 		}
 	</style>
 </head>
@@ -21,7 +24,7 @@
 var d = document.getElementById('d');
 var i = 6325;
 for(var i=6325; i<=6426; i++){
-	d.innerHTML = d.innerHTML+'<div>IMG_'+i+'_1.jpg'+'<br/><img src="http://www.migostudio.com/0731-1/images/IMG_'+i+'_1.jpg"></img><br/><br/></div>';
+	d.innerHTML = d.innerHTML+'<div><a href="http://www.migostudio.com/0731-1/images/IMG_'+i+'_1.jpg" target="_blank"><img src="http://www.migostudio.com/0731-1/thumb/IMG_'+i+'_1.jpg"></img></a><br/>IMG_'+i+'_1.jpg'+'</div>';
 }
 </script>
 </html>
