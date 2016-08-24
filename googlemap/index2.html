@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>google map dht</title>
+  <script src="https://webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
+  <script src="https://blockly.webduino.io/webduino-blockly.js"></script>
+  <style>
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #map {
+    width:100%;
+    height: 100%;
+  }
+  .mapMarker{
+    line-height: 20px;
+  }
+  .mapMarker h3 {
+    margin: 5px 0 8px 0;
+    padding: 5px 0 8px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+
+  <script type="text/javascript">
+  var map;
+  var position = "高雄市前鎮區復興四路20號";
+
+  function initialize() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15
+    });
+    setCenter(position);
+    marker();
+  }
+
+  function marker(){
+    GetAddressMarker('高雄市苓雅區英義街 105 巷','舊家','a1',2);
+    GetAddressMarker('英明國中','英明國中','a2',3);
+    GetAddressMarker('英明公園','英明公園','a3',10);
+  }
+
+
+  function setCenter(address) {
+    var marker = new google.maps.Marker({
+      map: map
+    });
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+      address: address
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        LatLng = results[0].geometry.location;
+        map.setCenter(LatLng);
+      }
+    });
+  }
+
+
+  function GetAddressMarker(address, title, name, z) {
+    var marker = new google.maps.Marker({
+      map: map,
+      zIndex:z
+    });
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+      address: address
+    }, function(results, status) {
+      if (status == google.maps.GeocoderStatus.OK) {
+        LatLng = results[0].geometry.location;
+        marker.setPosition(LatLng);        
+        console.log("【地址位置】緯度：" + LatLng.lat() + "經度：" + LatLng.lng());
+
+        var infowindow = new google.maps.InfoWindow({
+          content: '<div class="mapMarker ' + name + '" style="z-index:'+z+';"><h3>' + title + '</h3><div class="markerContent"></div></div>'
+        });
+        
+        console.log(infowindow);
+        infowindow.open(map, marker);
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+      }
+    });
+  }
+
+  </script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6TBwRrd2pQeyD0COblf4uADkO1EMjSCw&callback=initialize">
+  </script>
+</body>
+
+</html>
