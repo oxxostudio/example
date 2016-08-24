@@ -35,11 +35,11 @@
 <body>
   <div id="map"></div>
   <script type="text/javascript">
-  var key = 'AIzaSyB6TBwRrd2pQeyD0COblf4uADkO1EMjSCw';
-  var center = "二聖公園";
-  var zoom = 17;
-  var z = 1;
-  var map;
+  var gmapKey = 'AIzaSyB6TBwRrd2pQeyD0COblf4uADkO1EMjSCw';
+  var gmapCenter = "二聖公園";
+  var gmapZoom = 16;
+  var gmapZIndex = 1;
+  var gmap;
 
   function loadScript(url, callback) {
 
@@ -54,22 +54,22 @@
     document.getElementsByTagName("head")[0].appendChild(script);
   }
 
-  loadScript('https://maps.googleapis.com/maps/api/js?key=' + key, gmap);
+  loadScript('https://maps.googleapis.com/maps/api/js?key=' + gmapKey, gmapFn);
 
-  function gmap() {
+  function gmapFn() {
 
     initialize();
 
     function initialize() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        zoom: zoom
+      gmap = new google.maps.Map(document.getElementById('map'), {
+        zoom: gmapZoom
       });
-      setCenter(center);
+      setCenter(gmapCenter);
     }
 
     function setCenter(address) {
       var marker = new google.maps.Marker({
-        map: map
+        map: gmap
       });
       geocoder = new google.maps.Geocoder();
       geocoder.geocode({
@@ -77,17 +77,25 @@
       }, function(results, status) {
         if (status == google.maps.GeocoderStatus.OK) {
           LatLng = results[0].geometry.location;
-          map.setCenter(LatLng);
+          gmap.setCenter(LatLng);
         }
       });
     }
 
-    function GetAddressMarker(address, title, markerID) {
-      z = z + 1;
-      var marker = new google.maps.Marker({
-        map: map,
-        zIndex: z
-      });
+    function addressMarker(address, title, markerID, icon) {
+     gmapZIndex = gmapZIndex + 1;
+      if(icon){
+        var marker = new google.maps.Marker({
+          map: gmap,
+          zIndex: gmapZIndex,
+          icon:icon
+        });
+      }else{
+        var marker = new google.maps.Marker({
+          map: gmap,
+          zIndex: gmapZIndex
+        });
+      }
       geocoder = new google.maps.Geocoder();
       geocoder.geocode({
         address: address
@@ -98,21 +106,21 @@
           console.log("lat:" + LatLng.lat() + ",lng:" + LatLng.lng());
 
           var infowindow = new google.maps.InfoWindow({
-            content: '<div id="' + markerID + '" class="mapMarker" style="z-index:' + z + ';"><h3>' + title + '</h3><div class="markerContent"></div></div>'
+            content: '<div id="' + markerID + '" class="mapMarker" style="z-index:' + gmapZIndex + ';"><h3>' + title + '</h3><div class="markerContent"></div></div>'
           });
 
-          infowindow.open(map, marker);
+          infowindow.open(gmap, marker);
           marker.addListener('click', function() {
-            infowindow.open(map, marker);
+            infowindow.open(gmap, marker);
           });
 
         }
       });
     }
 
-    GetAddressMarker('二聖公園', '二聖公園', 'a1');
-    GetAddressMarker('英明國中', '英明國中', 'a2');
-    GetAddressMarker('英明公園', '英明公園', 'a3');
+    addressMarker('二聖公園', '二聖公園', 'a1');
+    addressMarker('英明國中', '英明國中', 'a2','http://icons.iconarchive.com/icons/pino/south-park/32/Eric-Cartman-icon.png');
+    addressMarker('英明公園', '英明公園', 'a3','http://besticons.net/sites/default/files/pizza-icon-9006.png');
   }
   </script>
 </body>
