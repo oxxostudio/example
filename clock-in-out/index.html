@@ -34,7 +34,7 @@
       switch (uid) {
         case 'E04CD76D':
           buzzer.play(['C6'], ['8']);
-          userName.innerHTML = '您好 張宗彥，刷卡時間：' + cardTime;
+          userName.innerHTML = '您好 OXXO，刷卡時間：' + cardTime;
           oxxoCard = new Firebase(firebaseUrl + 'oxxo/' + card[1] + card[2] + card[3] + '/');
           oxxoCard.push({
             card: 'E04CD76D',
