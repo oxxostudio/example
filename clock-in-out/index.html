@@ -10,14 +10,12 @@
 </head>
 
 <body>
-
-	<h2 id="userName">上下班請刷卡</h2>
-
+  <h2 id="userName">上下班請刷卡</h2>
   <script>
   var buzzer;
   var rfid;
-  var oxxoCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/oxxo/");
-  var unknowCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/unknow/");
+  var oxxoCard;
+  var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com/';
 
   var userName = document.getElementById('userName');
 
@@ -27,26 +25,30 @@
     buzzer = getBuzzer(board, 9);
     rfid = getRFID(board);
     rfid.read();
-    rfid.on("enter", function(uid) {
-      var cardTime = get_time()[1] + ' ' + get_time()[2];
+    rfid.on('enter', function(uid) {
+
+      var card = get_time();
+      var cardDate = card[1] + '/' + card[2] + '/' + card[3];
+      var cardTime = card[4] + ':' + card[5] + ':' + card[6];
+
       switch (uid) {
         case 'E04CD76D':
-          buzzer.play(["C6"], ["8"]);
+          buzzer.play(['C6'], ['8']);
           userName.innerHTML = '您好 張宗彥，刷卡時間：' + cardTime;
+          oxxoCard = new Firebase(firebaseUrl + 'oxxo/' + card[1] + card[2] + card[3] + '/');
           oxxoCard.push({
             card: 'E04CD76D',
-            date: get_time()[1],
-            time: get_time()[2],
-            during: get_time()[0]
+            time: cardTime,
+            during: card[0]
           });
           break;
         default:
-          buzzer.play(["b4", "f4"], ["8", "8"]);
-          userName.innerHTML = '卡片 未知，刷卡時間：'+cardTime;
+          buzzer.play(['b4', 'f4'], ['8', '8']);
+          userName.innerHTML = '卡片 未知，刷卡時間：' + cardTime;
+          unknowCard = new Firebase(firebaseUrl + 'unknow/' + card[1] + card[2] + card[3] + '/');
           unknowCard.push({
             card: uid,
-            date: get_time()[1],
-            time: get_time()[2]
+            time: cardTime
           });
           break;
       }
@@ -63,10 +65,28 @@
       varSeconds = varDay.getSeconds(),
       varGetTime = varDay.getTime();
 
-    var varDate = varYear + "/" + varMonth + "/" + varDate;
-    var varTime = varHours + ":" + varMinutes + ":" + varSeconds;
+    if (varMonth*1 < 10) {
+      varMonth = '0' + varMonth;
+    }
 
-    return [varGetTime, varDate, varTime];
+    if (varDate*1 < 10) {
+      varDate = '0' + varDate;
+    }
+
+    if (varHours*1 < 10) {
+      varHours = '0' + varHours;
+    }
+
+    if (varMinutes*1 < 10) {
+      varMinutes = '0' + varMinutes;
+    }
+
+    if (varSeconds*1 < 10) {
+      varSeconds = '0' + varSeconds;
+    }
+
+
+    return [varGetTime, varYear, varMonth, varDate, varHours, varMinutes, varSeconds];
   }
   </script>
 </body>
