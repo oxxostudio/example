@@ -10,11 +10,16 @@
 </head>
 
 <body>
+
+	<h2 id="userName">上下班請刷卡</h2>
+
   <script>
   var buzzer;
   var rfid;
   var oxxoCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/oxxo/");
   var unknowCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/unknow/");
+
+  var userName = document.getElementById('userName');
 
   boardReady('2kza', function(board) {
     board.systemReset();
@@ -23,12 +28,11 @@
     rfid = getRFID(board);
     rfid.read();
     rfid.on("enter", function(uid) {
+      var cardTime = get_time()[1] + ' ' + get_time()[2];
       switch (uid) {
         case 'E04CD76D':
           buzzer.play(["C6"], ["8"]);
-          var cardTime = get_time()[1] + ' ' + get_time()[2];
-          console.log('張宗彥');
-          console.log(cardTime);
+          userName.innerHTML = '您好 張宗彥，刷卡時間：' + cardTime;
           oxxoCard.push({
             card: 'E04CD76D',
             date: get_time()[1],
@@ -38,7 +42,7 @@
           break;
         default:
           buzzer.play(["b4", "f4"], ["8", "8"]);
-          console.log('none');
+          userName.innerHTML = '卡片 未知，刷卡時間：'+cardTime;
           unknowCard.push({
             card: uid,
             date: get_time()[1],
