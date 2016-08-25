@@ -7,9 +7,10 @@ var buzzer;
 var rfid;
 var oxxoCard;
 var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com';
-        
+
+
 Firebase.initializeApp({
-    databaseURL: firebaseUrl
+  databaseURL: firebaseUrl
 });
 
 console.log('Prepare...');
@@ -34,6 +35,7 @@ boardReady('2kza', function(board) {
 
     switch (uid) {
       case 'E04CD76D':
+        console.log('oxxo : ' + cardDate + ' ' + cardTime);
         buzzer.play(['C6'], ['8']);
         oxxoCard = Firebase.database().ref('oxxo/' + card[1] + card[2] + card[3] + '/');
         oxxoCard.push({
@@ -43,6 +45,7 @@ boardReady('2kza', function(board) {
         });
         break;
       default:
+        console.log('unknow : ' + cardDate + ' ' + cardTime);
         buzzer.play(['b4', 'f4'], ['8', '8']);
         unknowCard = Firebase.database().ref('unknow/' + card[1] + card[2] + card[3] + '/');
         unknowCard.push({
