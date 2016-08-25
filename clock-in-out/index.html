@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>上下班刷卡</title>
+  <script src="https://webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
+  <script src="https://blockly.webduino.io/webduino-blockly.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+</head>
+
+<body>
+  <script>
+  var buzzer;
+  var rfid;
+  var oxxoCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/oxxo/");
+  var unknowCard = new Firebase("https://clock-in-out-b2825.firebaseio.com/unknow/");
+
+  boardReady('2kza', function(board) {
+    board.systemReset();
+    board.samplingInterval = 250;
+    buzzer = getBuzzer(board, 9);
+    rfid = getRFID(board);
+    rfid.read();
+    rfid.on("enter", function(uid) {
+      switch (uid) {
+        case 'E04CD76D':
+          buzzer.play(["C6"], ["8"]);
+          var cardTime = get_time()[1] + ' ' + get_time()[2];
+          console.log('張宗彥');
+          console.log(cardTime);
+          oxxoCard.push({
+            card: 'E04CD76D',
+            date: get_time()[1],
+            time: get_time()[2],
+            during: get_time()[0]
+          });
+          break;
+        default:
+          buzzer.play(["b4", "f4"], ["8", "8"]);
+          console.log('none');
+          unknowCard.push({
+            card: uid,
+            date: get_time()[1],
+            time: get_time()[2]
+          });
+          break;
+      }
+    });
+  });
+
+  function get_time() {
+    var varDay = new Date(),
+      varYear = varDay.getFullYear(),
+      varMonth = varDay.getMonth() + 1,
+      varDate = varDay.getDate(),
+      varHours = varDay.getHours(),
+      varMinutes = varDay.getMinutes(),
+      varSeconds = varDay.getSeconds(),
+      varGetTime = varDay.getTime();
+
+    var varDate = varYear + "/" + varMonth + "/" + varDate;
+    var varTime = varHours + ":" + varMinutes + ":" + varSeconds;
+
+    return [varGetTime, varDate, varTime];
+  }
+  </script>
+</body>
+
+</html>
