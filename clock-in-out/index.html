@@ -21,7 +21,14 @@
 <body>
   <h1>Webduino 的某人在某天的上下班時間</h1>
   <span>姓名：</span>
-  <input id="userName" type="text" value="oxxo">
+  <select id="userName" type="text">
+    <option value="Marty">Marty</option>
+    <option value="Lynn">Lynn</option>
+    <option value="Mingze">Mingze</option>
+    <option value="oxxo">oxxo</option>
+    <option value="Sheng">Sheng</option>
+    <option value="Enya">Enya</option>
+  </select>
   <br/>
   <span>上班日：</span>
   <input id="userDate" type="date">
@@ -64,8 +71,6 @@
 
     var queryDate = userDate.value.replace(/-/ig, '');
     var dataBaseUrl = firebaseUrl + userName.value + '/' + queryDate;
-
-    console.log(dataBaseUrl);
 
     var userFirebase = new Firebase(dataBaseUrl);
 

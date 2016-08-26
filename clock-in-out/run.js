@@ -5,8 +5,28 @@ var Firebase = require('firebase');
 
 var buzzer;
 var rfid;
-var oxxoCard;
+var user;
 var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com';
+
+var list = [{
+  Id: 'E04CD76D',
+  Name: 'oxxo'
+}, {
+  Id: 'aa',
+  Name: 'Marty'
+}, {
+  Id: 'F048D76D',
+  Name: 'Sheng'
+}, {
+  Id: 'cc',
+  Name: 'M.Z.'
+}, {
+  Id: 'dd',
+  Name: 'Enya'
+}, {
+  Id: '003DD76D',
+  Name: 'Lynn'
+}];
 
 
 Firebase.initializeApp({
@@ -15,7 +35,7 @@ Firebase.initializeApp({
 
 console.log('Prepare...');
 
-boardReady('2kza', function(board) {
+boardReady({device:'2kza', multi: true}, function(board) {
 
   console.log('Board Ready!');
 
@@ -33,27 +53,32 @@ boardReady('2kza', function(board) {
     var cardDate = card[1] + '/' + card[2] + '/' + card[3];
     var cardTime = card[4] + ':' + card[5] + ':' + card[6];
 
-    switch (uid) {
-      case 'E04CD76D':
-        console.log('oxxo : ' + cardDate + ' ' + cardTime);
+    var unknow = 1;
+
+    for (var i = 0; i < list.length; i++) {
+      if (uid == list[i].Id) {
+        unknow = 0;
+        console.log(list[i].Name + ' : ' + cardDate + ' ' + cardTime);
         buzzer.play(['C6'], ['8']);
-        oxxoCard = Firebase.database().ref('oxxo/' + card[1] + card[2] + card[3] + '/');
-        oxxoCard.push({
-          card: 'E04CD76D',
+        user = Firebase.database().ref(list[i].Name + '/' + card[1] + card[2] + card[3] + '/');
+        user.push({
+          card: list[i].Id,
           time: cardTime,
           during: card[0]
         });
-        break;
-      default:
-        console.log('unknow : ' + cardDate + ' ' + cardTime);
-        buzzer.play(['b4', 'f4'], ['8', '8']);
-        unknowCard = Firebase.database().ref('unknow/' + card[1] + card[2] + card[3] + '/');
-        unknowCard.push({
-          card: uid,
-          time: cardTime
-        });
-        break;
+      } else {
+        if (unknow == 1 && i == list.length-1) {
+          console.log('unknow : ' + cardDate + ' ' + cardTime);
+          buzzer.play(['b4', 'f4'], ['8', '8']);
+          user = Firebase.database().ref('unknow/' + card[1] + card[2] + card[3] + '/');
+          user.push({
+            card: uid,
+            time: cardTime
+          });
+        }
+      }
     }
+
   });
 });
 
@@ -86,7 +111,6 @@ function get_time() {
   if (varSeconds * 1 < 10) {
     varSeconds = '0' + varSeconds;
   }
-
 
   return [varGetTime, varYear, varMonth, varDate, varHours, varMinutes, varSeconds];
 }
