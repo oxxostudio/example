@@ -12,16 +12,16 @@ var list = [{
   Id: 'E04CD76D',
   Name: 'oxxo'
 }, {
-  Id: 'aa',
+  Id: 'F050D76D',
   Name: 'Marty'
 }, {
   Id: 'F048D76D',
   Name: 'Sheng'
 }, {
-  Id: 'cc',
-  Name: 'M.Z.'
+  Id: '1049D76D',
+  Name: 'Mingze'
 }, {
-  Id: 'dd',
+  Id: '3023D76D',
   Name: 'Enya'
 }, {
   Id: '003DD76D',
@@ -68,7 +68,7 @@ boardReady({device:'2kza', multi: true}, function(board) {
         });
       } else {
         if (unknow == 1 && i == list.length-1) {
-          console.log('unknow : ' + cardDate + ' ' + cardTime);
+          console.log('unknow "' + uid + '" : ' + cardDate + ' ' + cardTime);
           buzzer.play(['b4', 'f4'], ['8', '8']);
           user = Firebase.database().ref('unknow/' + card[1] + card[2] + card[3] + '/');
           user.push({
