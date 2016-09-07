@@ -6,7 +6,9 @@ var Firebase = require('firebase');
 var buzzer;
 var rfid;
 var user;
+var deviceName = '2kza';
 var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com';
+var buzzerPinNum = 9;
 
 var list = [{
   Id: 'E04CD76D',
@@ -38,13 +40,16 @@ Firebase.initializeApp({
 
 console.log('Prepare...');
 
-boardReady({device:'2kza', multi: true}, function(board) {
+boardReady({
+  device: deviceName,
+  multi: true
+}, function(board) {
 
-  console.log('Board Ready!');
+  console.log('Board:"' + deviceName + '" Ready!');
 
   board.systemReset();
   board.samplingInterval = 250;
-  buzzer = getBuzzer(board, 9);
+  buzzer = getBuzzer(board, buzzerPinNum);
   rfid = getRFID(board);
   rfid.read();
 
@@ -70,7 +75,7 @@ boardReady({device:'2kza', multi: true}, function(board) {
           during: card[0]
         });
       } else {
-        if (unknow == 1 && i == list.length-1) {
+        if (unknow == 1 && i == list.length - 1) {
           console.log('unknow "' + uid + '" : ' + cardDate + ' ' + cardTime);
           buzzer.play(['b4', 'f4'], ['8', '8']);
           user = Firebase.database().ref('unknow/' + card[1] + card[2] + card[3] + '/');

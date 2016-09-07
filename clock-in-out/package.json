@@ -1,0 +1,17 @@
+{
+  "name": "clock-in-out",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "webduino-blockly": "^0.0.7",
+    "firebase": "^3.3.0",
+    "webduino-js": "^0.4.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
