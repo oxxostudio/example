@@ -32,7 +32,6 @@
 <body>
   <div id="map"></div>
   <script type="text/javascript">
-  
   var gmapKey = 'AIzaSyB6TBwRrd2pQeyD0COblf4uADkO1EMjSCw';
   var gmapCenter = '高雄市';
   var gmapZoom = 16;
@@ -78,15 +77,18 @@
         if (status == google.maps.GeocoderStatus.OK) {
           LatLng = results[0].geometry.location;
           gmap.setCenter(LatLng);
-        }else{
-          gmap.setCenter({lat:22.604,lng:120.299});
+        } else {
+          gmap.setCenter({
+            lat: 22.604,
+            lng: 120.299
+          });
         }
       });
     }
 
-    function addressMarker(address, title, markerID, icon) {
+    function addressMarker(address, title, markerID, icon, callback) {
       if (gmapPosArray.indexOf(markerID) == -1) {
-        
+
         gmapPosArray.push(markerID);
 
         gmapZIndex = gmapZIndex + 1;
@@ -124,8 +126,14 @@
               infowindow.open(gmap, marker);
             });
 
-          }else{
-            console.log(address+' is error');
+            google.maps.event.addListener(infowindow, 'domready', function() {
+              if (callback) {
+                callback();
+              };
+            });
+
+          } else {
+            console.log(address + ' is error');
           }
         });
       }
@@ -133,7 +141,11 @@
 
     addressMarker('二聖公園', '二聖公園', 'a1');
     addressMarker('台灣高雄市苓雅區四維三路2號', '四維行政中心', 'a2', 'http://icons.iconarchive.com/icons/pino/south-park/32/Eric-Cartman-icon.png');
-    addressMarker('英明公園', '英明公園', 'a3', 'http://besticons.net/sites/default/files/pizza-icon-9006.png');
+    addressMarker('英明公園', '英明公園', 'a3', 'http://besticons.net/sites/default/files/pizza-icon-9006.png', test);
+
+    function test() {
+      document.getElementById('a3').innerHTML = '123';
+    }
 
   }
   </script>
