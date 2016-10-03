@@ -4,8 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <title>google map dht</title>
-  <script src="https://webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
-  <script src="https://blockly.webduino.io/webduino-blockly.js"></script>
   <style>
   html,
   body {
@@ -36,7 +34,7 @@
   <script type="text/javascript">
   
   var gmapKey = 'AIzaSyB6TBwRrd2pQeyD0COblf4uADkO1EMjSCw';
-  var gmapCenter = '二聖公園';
+  var gmapCenter = '高雄市';
   var gmapZoom = 16;
   var gmapZIndex = 1;
   var gmap;
@@ -80,6 +78,8 @@
         if (status == google.maps.GeocoderStatus.OK) {
           LatLng = results[0].geometry.location;
           gmap.setCenter(LatLng);
+        }else{
+          gmap.setCenter({lat:22.604,lng:120.299});
         }
       });
     }
@@ -124,13 +124,15 @@
               infowindow.open(gmap, marker);
             });
 
+          }else{
+            console.log(address+' is error');
           }
         });
       }
     }
 
     addressMarker('二聖公園', '二聖公園', 'a1');
-    addressMarker('英明國中', '英明國中', 'a2', 'http://icons.iconarchive.com/icons/pino/south-park/32/Eric-Cartman-icon.png');
+    addressMarker('台灣高雄市苓雅區四維三路2號', '四維行政中心', 'a2', 'http://icons.iconarchive.com/icons/pino/south-park/32/Eric-Cartman-icon.png');
     addressMarker('英明公園', '英明公園', 'a3', 'http://besticons.net/sites/default/files/pizza-icon-9006.png');
 
   }
