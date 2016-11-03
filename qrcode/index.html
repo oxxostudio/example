@@ -1,0 +1,117 @@
+<!--  
+use Google Chart Infographic
+https://developers.google.com/chart/infographics/docs/overview
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>OXXO's QRCode 產生器 ( QRCode Generator )</title>
+  <style>
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    line-height: 36px;
+  }
+  
+  header {
+    width: 100%;
+    height: 60px;
+    background: #000;
+    color: #fff;
+    padding:10px 20px;
+    box-sizing: border-box;
+  }
+  
+  content,
+  input,
+  select,
+  button {
+    font-size: 18px;
+  }
+
+  content{
+  	display:block;
+  	padding:20px;
+  }
+
+  a{
+  	color:#aaa;
+  }
+  a:hover{
+  	color:#fa0;
+  }
+  
+	select{
+		margin-right:10px;
+	}
+
+  #imgData {
+    width: 300px;
+  }
+  </style>
+</head>
+
+<body>
+  <header>
+    OXXO's QRCode 產生器 ( <a href="http://oxxo.studio" target="_blank">http://oxxo.studio</a> )
+  </header>
+  <content>
+    內容：
+    <input type="text" id="imgData">
+    <br/> 尺寸：
+    <select id="imgSize">
+      <option value="100x100">100</option>
+      <option value="200x200">200</option>
+      <option value="300x300">300</option>
+      <option value="400x400">400</option>
+      <option value="500x500" selected>500</option>
+      option
+    </select> 
+    容錯率：
+    <select id="imgLevel">
+      <option value="L">7%</option>
+      <option value="M">15%</option>
+      <option value="Q">25%</option>
+      <option value="H">30%</option>
+      option
+    </select>
+    <br/>
+    <button id="btn">產生</button>
+    <div id="show">
+    </div>
+  </content>
+  <script>
+  var imgData = document.getElementById('imgData');
+  var imgSize = document.getElementById('imgSize');
+  var imgLevel = document.getElementById('imgLevel');
+  var btn = document.getElementById('btn');
+  var show = document.getElementById('show');
+  var qrcode;
+
+  btn.onclick = function() {
+    qrcode = 'https://chart.googleapis.com/chart?chs=' + imgSize.value + '&cht=qr&chld=' + imgLevel.value + '&chl=' + imgData.value;
+    show.innerHTML = '<img src=' + qrcode + '>';
+  };
+  </script>
+
+  <script>
+    window.onload = function(){
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-2708968-3', 'oxxostudio.tw');
+    ga('send', 'pageview');
+  };
+  </script>
+</body>
+
+</html>
