@@ -7,63 +7,48 @@
   <script src="https://webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
   <script src="https://blockly.webduino.io/webduino-blockly.js"></script>
   <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+  <style>
+  input {
+    margin: 3px 0;
+  }
+  
+  #showContent {
+    line-height: 24px;
+  }
+  </style>
 </head>
 
 <body>
-  <h2 id="userName">上下班請刷卡</h2>
+  <h1>Webduino 的某人在某天的上下班時間</h1>
+  <span>姓名：</span>
+  <select id="userName" type="text">
+    <option value="Marty">益祥 Marty</option>
+    <option value="Lynn">玉玲 Lynn</option>
+    <option value="Mingze">名澤 Mingze</option>
+    <option value="oxxo">宗彥 oxxo</option>
+    <option value="Sheng">聖原 Sheng</option>
+    <option value="Enya">宛儀 Enya</option>
+    <option value="Birte">豪萱 Birte</option>
+  </select>
+  <br/>
+  <span>上班日：</span>
+  <input id="userDate" type="date">
+  <br/>
+  <button id="submit">查詢</button>
+  <div id="show">
+  </div>
   <script>
-  var buzzer;
-  var rfid;
-  var oxxoCard;
   var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com/';
-
   var userName = document.getElementById('userName');
-
-  boardReady('2kza', function(board) {
-    board.systemReset();
-    board.samplingInterval = 250;
-    buzzer = getBuzzer(board, 9);
-    rfid = getRFID(board);
-    rfid.read();
-    rfid.on('enter', function(uid) {
-
-      var card = get_time();
-      var cardDate = card[1] + '/' + card[2] + '/' + card[3];
-      var cardTime = card[4] + ':' + card[5] + ':' + card[6];
-
-      switch (uid) {
-        case 'E04CD76D':
-          buzzer.play(['C6'], ['8']);
-          userName.innerHTML = '您好 OXXO，刷卡時間：' + cardTime;
-          oxxoCard = new Firebase(firebaseUrl + 'oxxo/' + card[1] + card[2] + card[3] + '/');
-          oxxoCard.push({
-            card: 'E04CD76D',
-            time: cardTime,
-            during: card[0]
-          });
-          break;
-        default:
-          buzzer.play(['b4', 'f4'], ['8', '8']);
-          userName.innerHTML = '卡片 未知，刷卡時間：' + cardTime;
-          unknowCard = new Firebase(firebaseUrl + 'unknow/' + card[1] + card[2] + card[3] + '/');
-          unknowCard.push({
-            card: uid,
-            time: cardTime
-          });
-          break;
-      }
-    });
-  });
+  var userDate = document.getElementById('userDate');
+  var submit = document.getElementById('submit');
+  var show = document.getElementById('show');
 
   function get_time() {
     var varDay = new Date(),
       varYear = varDay.getFullYear(),
       varMonth = varDay.getMonth() + 1,
-      varDate = varDay.getDate(),
-      varHours = varDay.getHours(),
-      varMinutes = varDay.getMinutes(),
-      varSeconds = varDay.getSeconds(),
-      varGetTime = varDay.getTime();
+      varDate = varDay.getDate();
 
     if (varMonth*1 < 10) {
       varMonth = '0' + varMonth;
@@ -73,20 +58,35 @@
       varDate = '0' + varDate;
     }
 
-    if (varHours*1 < 10) {
-      varHours = '0' + varHours;
-    }
+    return [varYear, varMonth, varDate];
+  }
+  var userTime = get_time()[0] + '-' + get_time()[1] + '-' + get_time()[2];
 
-    if (varMinutes*1 < 10) {
-      varMinutes = '0' + varMinutes;
-    }
+  userDate.setAttribute('value',userTime);
 
-    if (varSeconds*1 < 10) {
-      varSeconds = '0' + varSeconds;
-    }
+  console.log(userDate);
 
+  submit.addEventListener("click", read);
 
-    return [varGetTime, varYear, varMonth, varDate, varHours, varMinutes, varSeconds];
+  function read() {
+
+    var queryDate = userDate.value.replace(/-/ig, '');
+    var dataBaseUrl = firebaseUrl + userName.value + '/' + queryDate;
+
+    var userFirebase = new Firebase(dataBaseUrl);
+
+    userFirebase.on("value", function(snapshot) {
+      val = [];
+      snapshot.forEach(function(data) {
+        val.push(data.val().time);
+      });
+      show.innerHTML = '<div id="showContent"><h3>' + userName.value + ' 在 ' + userDate.value + ' 的出勤狀況</h3>' +
+        '首刷：' + val[0] + '<br/>' +
+        '末刷：' + val[val.length - 1] + '</div>';
+    }, function(errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+
   }
   </script>
 </body>
