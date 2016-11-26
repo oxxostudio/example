@@ -7,7 +7,7 @@ var buzzer;
 var rfid;
 var user;
 var deviceName = '2kza';
-var firebaseUrl = 'https://clock-in-out-b2825.firebaseio.com';
+var firebaseUrl = 'https://bell-card.firebaseio.com/';
 var buzzerPinNum = 9;
 
 var list = [{
