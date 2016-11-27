@@ -60,8 +60,12 @@
     margin: 0 -1px 0 0;
     line-height: 28px;
     height: 100%;
-    width: 100px;
+    width: 90px;
     text-align: center;
+  }
+
+  #show strong{
+    width: 60px;
   }
   
   #show .tableTitle strong,
@@ -122,40 +126,33 @@
     if (t == 1) {
       return varYear + '-' + varMonth;
     } else if (t == 2) {
-      return (varYear + '' + varMonth) * 1;
-    } else if (t == 3) {
       return (varYear + '' + varMonth + '' + varDate) * 1;
-    } else if (t == 4) {
-      return varYear + '/' + varMonth + '/' + varDate;
-    } else if (t == 5) {
-      return varMonth;
     } else {
       return varDate * 1;
     }
   }
 
-  userDate.value = get_time(1);
+  userDate.value = get_time(1);  //設定預設年月份
 
   submit.addEventListener("click", function() {
-    readDate(userDate.value, get_time(4));
+    readDate(userDate.value);  
   });
 
-  function readDate(t, d) {
-    var queryTime = t.replace(/-/ig, '');
-    var w = new Date(d);
+  function readDate(t) {
+    var queryTime = t.replace(/-/ig, '');   //轉換日期中間不要有-號
     var dataBaseUrl = firebaseUrl + userName.value;
     var userFirebase = new Firebase(dataBaseUrl);
     var month = [];
     for (var i = 0; i < 31; i++) {
-      month[i] = '&nbsp;';
+      month[i] = '&nbsp;';   //先做一個長度為31的月份陣列，預設塞入空白字元
     }
     userFirebase.on("value", function(snapshot) {
-      showName.innerHTML = userName.value;
+      showName.innerHTML = userName.value;         //firebase載入後才顯示人名與月份
       showMonth.innerHTML = userDate.value;
       var val = [];
-      var date = get_time(3);
+      var date = get_time(2);
       var check, week, d1, d2, kk, mm, yy;
-      var m1 = [1, 3, 5, 7, 8, 10, 12];
+      var m1 = [1, 3, 5, 7, 8, 10, 12];      //判斷大月小月和星期
       var m2 = [4, 6, 9, 11];
       var d3 = ['日', '一', '二', '三', '四', '五', '六'];
       snapshot.forEach(function(data) {
@@ -166,7 +163,7 @@
         var b = val[j][0].substr(6, 8) * 1 - 1;
         var c = val[j][1];
         if (a == queryTime) {
-          month[b] = c;
+          month[b] = c;    //把對應日期資料庫的內容，塞到該月份對應的天數裡
         }
       }
       yy = queryTime.substr(0, 4) * 1;
@@ -177,42 +174,54 @@
       if (m2.indexOf(mm) != -1) {
         kk = 30;
       }
-      if (mm == 2 && yy%4 == 0) {
-        kk = 29;
+      if (mm == 2 && yy % 4 == 0) {
+        kk = 29;    //判斷閏月
       }
-      if (mm == 2 && yy%4 != 0) {
+      if (mm == 2 && yy % 4 != 0) {
         kk = 28;
       }
-      
+
+      //第一行title
       show.innerHTML = '<div class="tableTitle"><strong>日期</strong><span>首刷</span><span>末刷</span><span>工時</span></div>';
 
       for (var k = 0; k < kk; k++) {
         if (k < 9) {
-          check = (queryTime + '0' + (k + 1)) * 1;
+          check = (queryTime + '0' + (k + 1)) * 1;  //補零
           week = queryTime.substr(0, 4) + '/' + queryTime.substr(4, 6) + '/' + '0' + (k + 1);
         } else {
           check = (queryTime + '' + (k + 1)) * 1;
           week = queryTime.substr(0, 4) + '/' + queryTime.substr(4, 6) + '/' + (k + 1);
         }
         d1 = new Date(week);
-        d2 = d1.getDay();
+        d2 = d1.getDay();  //判斷星期幾
+        //判斷當天有沒有刷卡數值，有的話就會有物件
         if (typeof(month[k]) == 'object') {
           var obj = month[k];
           var arr = Object.keys(obj).map(function(key) {
             return obj[key];
           });
+          var tStart, tEnd, tCount;  //設定首刷、末刷與總工時
           var t1 = arr[0].time.split(':');
           var t2 = arr[arr.length - 1].time.split(':');
-          var h = t2[0] - t1[0];
-          var m = t2[1] - t1[1];
-          if (m < 0) {
-            m = 59 + m;
-            h = h - 1;
+          if (t1[0] == t2[0] && t1[1] == t2[1]) {
+            tStart = arr[0].time;   //如果只有刷一次，或是兩次間隔一分鐘以內，判斷只有首刷
+            tEnd = '&nbsp;';
+            tCount = '&nbsp;';
+          } else {
+            tStart = arr[0].time;
+            tEnd = arr[arr.length - 1].time;
+            var h = t2[0] - t1[0];
+            var m = t2[1] - t1[1];
+            if (m < 0) {
+              m = 60 + m;
+              h = h - 1;
+            }
+            tCount = h + '小時 ' + m + '分';  //計算總工時
           }
           if (check == date) {
-            show.innerHTML = show.innerHTML + '<div class="today"><strong>' + (k + 1) + ' (' + d3[d2] + ')</strong><span>' + arr[0].time + '</span><span>' + arr[arr.length - 1].time + '</span><span>' + h + '小時 ' + m + '分</span></div>';
+            show.innerHTML = show.innerHTML + '<div class="today"><strong>' + (k + 1) + ' (' + d3[d2] + ')</strong><span>' + tStart + '</span><span>' + tEnd + '</span><span>' + tCount + '</span></div>';
           } else {
-            show.innerHTML = show.innerHTML + '<div><strong>' + (k + 1) + ' (' + d3[d2] + ')</strong><span>' + arr[0].time + '</span><span>' + arr[arr.length - 1].time + '</span><span>' + h + '小時 ' + m + '分</span></div>';
+            show.innerHTML = show.innerHTML + '<div><strong>' + (k + 1) + ' (' + d3[d2] + ')</strong><span>' + tStart + '</span><span>' + tEnd + '</span><span>' + tCount + '</span></div>';
           }
         } else {
           if (check == date) {
