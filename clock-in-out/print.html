@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>出差單預覽列印</title>
+  <script src="jquery-1.12.4.min.js"></script>
+  <style>
+  #preview {
+    font-family: 'verdana';
+    margin: 20px;
+    font-size: 20px;
+  }
+  
+  #preview>div {
+    margin: 10px;
+  }
+  
+  #previewCost {
+    margin: 10px;
+  }
+  
+  #previewCost>div {
+    margin: 10px;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="preview">
+    <div><span>姓名：</span><span id="previewUser"></span></div>
+    <div><span>地點：</span><span id="previewLocation"></span></div>
+    <div><span>時間：</span><span id="previewTime"></span></div>
+    <div><span>講師/助教費：</span><span id="previewCharge">無</span></div>
+    <div><span>花費報支：</span>
+      <div id="previewCost">
+      </div>
+    </div>
+  </div>
+  <script>
+  $(function() {
+
+    var previewUser = $('#previewUser');
+    var previewLocation = $('#previewLocation');
+    var previewTime = $('#previewTime');
+    var previewCostType = $('.previewCostType');
+    var previewCostNum = $('.previewCostNum');
+    var previewCostNote = $('.previewCostNote');
+    var previewCharge = $('#previewCharge');
+    var previewCost = $('#previewCost');
+    var previewContent = '<div><span class="previewCostType"></span><span class="previewCostNum"></span><span class="previewCostNote"></span></div>';
+
+    previewCost.html(previewContent);
+
+    var retrievedObject = localStorage.getItem('busineseTrip');
+    var data = JSON.parse(retrievedObject);
+
+    previewUser.text(data.user);
+    previewLocation.text(data.location);
+    previewTime.text(data.time[0] + ' (' + data.time[1] + ') --- ' + data.time[2] + ' (' + data.time[3] + ')');
+    previewCharge.text('共 ' + data.charge * data.hour + ' 元');
+    for (var i = 0; i < data.cost.length; i++) {
+      previewCost.append(previewContent);
+    }
+    previewCostType = $('.previewCostType');
+    previewCostNum = $('.previewCostNum');
+    previewCostNote = $('.previewCostNote');
+    for (var i = 0; i < data.cost.length; i++) {
+      previewCostType[i].innerHTML = '- ' + data.cost[i].type + '：';
+      previewCostNum[i].innerHTML = data.cost[i].num + '元';
+      previewCostNote[i].innerHTML = ' ( ' + data.cost[i].note + ' )';
+    }
+
+  });
+  </script>
+</body>
+
+</html>

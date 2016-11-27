@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>出差表單測試</title>
+  <script src="jquery-1.12.4.min.js"></script>
+  <style>
+  body {
+    font-family: 'verdana';
+  }
+  
+  .input-table,
+  button {
+    margin: 10px 0;
+  }
+  
+  .cost-table {
+    margin: 10px 20px;
+  }
+  
+  #addBtn {
+    margin: 5px 20px;
+  }
+  
+  #preview>div {
+    margin: 10px;
+  }
+  #previewCost>div{
+  	margin:10px;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="main">
+    <div id="trip1" class="input-table">
+      <span>出差人員</span>
+      <select id="tripUser">
+        <option value="Marty">益祥 Marty</option>
+        <option value="Lynn">玉玲 Lynn</option>
+        <option value="Mingze">名澤 Mingze</option>
+        <option value="oxxo">宗彥 oxxo</option>
+        <option value="Sheng">聖原 Sheng</option>
+        <option value="Enya">宛儀 Enya</option>
+        <option value="Birte">豪萱 Birte</option>
+        <option value="Didi">怡萱 Didi</option>
+      </select>
+      <span>出差地點</span>
+      <input id="tripLocation">
+    </div>
+    <div id="trip2" class="input-table">
+      <span>日期區間</span>
+      <input id="tripStartDate" type="date" class="tripTime">
+      <input id="tripStartTime" type="time" class="tripTime">
+      <span>到</span>
+      <input id="tripEndDate" type="date" class="tripTime">
+      <input id="tripEndTime" type="time" class="tripTime">
+    </div>
+    <div id="trip3" class="input-table">
+      <span>講師/助教費</span>
+      <input id="tripCharge" value="0" type="number">
+      <span>元/小時，總時數</span>
+      <input id="tripHour" value="0" type="number">
+      <span>小時 ( 例假日出差、無補助則不用填 )</span>
+    </div>
+    <div class="input-table">出差花費報支</div>
+    <div id="trip4" class="input-table"></div>
+    <button id="addBtn">新增項目</button>
+  </div>
+  <hr>
+  <div id="preview">
+    <div><span>姓名：</span><span id="previewUser">...</span></div>
+    <div><span>地點：</span><span id="previewLocation">...</span></div>
+    <div><span>時間：</span><span id="previewTime">...</span></div>
+    <div><span>講師 /助教費：</span><span id="previewCharge">無</span></div>
+    <div><span>花費報支：</span>
+      <div id="previewCost">
+      </div>
+    </div>
+  </div>
+  <button id="sumitBtn">送出表單</button>
+  <a href="print.html" target="_blank">預覽列印</a>
+  <script src="test2.js"></script>
+</body>
+
+</html>
