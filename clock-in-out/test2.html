@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>出差表單測試</title>
   <script src="jquery-1.12.4.min.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
   <style>
   body {
     font-family: 'verdana';
@@ -23,11 +24,29 @@
     margin: 5px 20px;
   }
   
+	#preview{
+		margin:30px 0;
+	}
+
   #preview>div {
     margin: 10px;
   }
   #previewCost>div{
   	margin:10px;
+  }
+
+  a,button{
+  	display:inline-block;
+  	border:1px solid #aaa;
+  	background:#eee;
+  	text-decoration: none;
+  	color:#000;
+  	font-size:13px;
+  	padding:5px;
+  	cursor:pointer;
+  }
+  a:hover,button:hover{
+  	background:#ddd;
   }
   </style>
 </head>
@@ -37,7 +56,7 @@
     <div id="trip1" class="input-table">
       <span>出差人員</span>
       <select id="tripUser">
-        <option value="Marty">益祥 Marty</option>
+        <option value="Marty" default>益祥 Marty</option>
         <option value="Lynn">玉玲 Lynn</option>
         <option value="Mingze">名澤 Mingze</option>
         <option value="oxxo">宗彥 oxxo</option>
@@ -79,8 +98,10 @@
       </div>
     </div>
   </div>
-  <button id="sumitBtn">送出表單</button>
+  <hr>
   <a href="print.html" target="_blank">預覽列印</a>
+  <button id="sumitBtn">送出表單</button>
+  <button id="clearBtn">清除重填</button>
   <script src="test2.js"></script>
 </body>
 

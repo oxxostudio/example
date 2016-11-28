@@ -1,4 +1,6 @@
 $(function() {
+  var firebaseUrl = 'https://business-trip-fea58.firebaseio.com/';
+
   var tripUser = $('#tripUser');
   var previewUser = $('#previewUser');
 
@@ -21,6 +23,7 @@ $(function() {
   var addBtn = $('#addBtn');
 
   var sumitBtn = $('#sumitBtn');
+  var clearBtn = $('#clearBtn');
 
   var costTable;
   var costContent = '    <div class="cost-table">\n' +
@@ -83,10 +86,8 @@ $(function() {
       previewCharge.text(tripCharge.val() * tripHour.val() + ' 元 ( 共 ' + tripHour.val() + ' 小時)');
     }
     if (data.cost) {
-      console.log(data.cost);
       var dataLength = data.cost.length;
-      for (var i = 0; i < dataLength-1; i++) {
-        console.log(i);
+      for (var i = 0; i < dataLength - 1; i++) {
         trip4.append(costContent);
       }
       tripCostType = $('.tripCostType');
@@ -107,9 +108,13 @@ $(function() {
         previewCostNote[i].innerHTML = data.cost[i].note + ' )';
       }
       cost();
-    }else{
-    	cost();
+    } else {
+      cost();
     }
+  } else {
+    previewUser.text(tripUser.val());
+    data.user = tripUser.val();
+    saveToLocalStorage();
   }
 
 
@@ -151,7 +156,26 @@ $(function() {
   });
 
   sumitBtn.on('click', function() {
-    console.log(data);
+    if (data.user && data.time && data.loation && data.hour && data.charge && data.cost) {
+      if (confirm("是否確定送出？")) {
+        console.log(data);
+        var dataBaseUrl = firebaseUrl + data.user + '/' + tripStartDate.val();
+        var userFirebase = new Firebase(dataBaseUrl);
+        userFirebase.push(data);
+        sumitBtn.text('出差單完成 ( 點選重新送出 )');
+      } 
+    }else{
+    	alert('表單尚未填寫完畢，請檢查後再送出');
+    }
+  });
+
+  clearBtn.on('click', function() {
+    if (confirm("真的要清除重填？")) {
+      data = {};
+      data.cost = [];
+      window.localStorage.busineseTrip = '';
+      window.location.reload();
+    }
   });
 
 
