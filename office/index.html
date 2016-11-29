@@ -85,15 +85,15 @@
   <div class="column">
     <label>姓名</label>
     <select id="userName" type="text">
-      <option value="Marty">益祥 Marty</option>
-      <option value="Lynn">玉玲 Lynn</option>
-      <option value="Mingze">名澤 Mingze</option>
-      <option value="oxxo">宗彥 oxxo</option>
-      <option value="Sheng">聖原 Sheng</option>
-      <option value="Enya">宛儀 Enya</option>
-      <option value="Birte">豪萱 Birte</option>
-      <option value="Didi">怡萱 Didi</option>
-      <option value="Yuan">阿元 Yuan</option>
+      <option value="許益祥 Marty"></option>
+      <option value="林玉玲 Lynn"></option>
+      <option value="柯名澤 Mingze"></option>
+      <option value="張宗彥 oxxo"></option>
+      <option value="黃聖原 Sheng"></option>
+      <option value="蘇宛儀 Enya"></option>
+      <option value="劉豪萱 Birte"></option>
+      <option value="吳怡萱 Didi"></option>
+      <option value="阿元 Yuan"></option>
     </select>
     <select id="selectYear">
       <option value="2016">2016</option>
@@ -124,7 +124,7 @@
   <script>
   var firebaseUrl = 'https://bell-card.firebaseio.com/';
   var userName = document.getElementById('userName');
-  var userSelect = document.getElementById('userSelect');
+  var userSelect = document.querySelectorAll('#userName option');
   var userDate = document.getElementById('userDate');
   var selectYear = document.getElementById('selectYear');
   var selectMonth = document.getElementById('selectMonth');
@@ -133,6 +133,10 @@
   var submit = document.getElementById('submit');
   var show = document.getElementById('show');
 
+  //直接使用清單的 value 作為顯示文字
+  userSelect.forEach(function(item, index) {
+    userSelect[index].innerHTML = userSelect[index].value;
+  });
 
   function get_time(t) {
     var varDay = new Date(),
@@ -170,15 +174,17 @@
 
   function readDate(t) {
     var queryTime = t; //轉換日期中間不要有-號
-    var dataBaseUrl = firebaseUrl + userName.value;
+    var user = userName.value.split(' ');
+    var dataBaseUrl = firebaseUrl + user[1];
     var userFirebase = new Firebase(dataBaseUrl);
     var month = [];
     for (var i = 0; i < 31; i++) {
       month[i] = '&nbsp;'; //先做一個長度為31的月份陣列，預設塞入空白字元
     }
-    showName.innerHTML = userName.value; //firebase載入後才顯示人名與月份
+    showName.innerHTML = user[0] + ' ( ' + user[1] + ' )'; 
     showMonth.innerHTML = t;
-    show.innerHTML = '<i style="font-size:20px;">資料載入中...</i>';
+    show.innerHTML = '<i style="font-size:16px;">資料載入中...</i>';
+    //載入 Firebase
     userFirebase.on("value", function(snapshot) {
       var val = [];
       var date = get_time(2);
@@ -189,14 +195,14 @@
       snapshot.forEach(function(data) {
         val.push([data.key(), data.val()]);
       });
-      for (var j = 0; j < val.length; j++) {
-        var a = val[j][0].substr(0, 6);
-        var b = val[j][0].substr(6, 8) * 1 - 1;
-        var c = val[j][1];
+      val.forEach(function(item, index){
+        var a = val[index][0].substr(0, 6);
+        var b = val[index][0].substr(6, 8) * 1 - 1;
+        var c = val[index][1];
         if (a == queryTime) {
           month[b] = c; //把對應日期資料庫的內容，塞到該月份對應的天數裡
         }
-      }
+      });
       yy = queryTime.substr(0, 4) * 1;
       mm = queryTime.substr(4, 6) * 1;
       if (m1.indexOf(mm) != -1) {
