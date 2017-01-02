@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+
+<body>
+  第一欄：<input id="a1"><br/>
+  第二欄：<input id="a2"><br/>
+  第三欄：<input id="a3"><br/>
+  <button id="b">儲存</button>
+</body>
+<script>
+$(function(){
+  var $a1 = $('#a1'),
+      $a2 = $('#a2'),
+      $a3 = $('#a3'),
+      $b = $('#b'),
+      a = {};
+  
+  $b.on('click',function(){
+    a.data = [$a1.val(),$a2.val(),$a3.val()];
+    a.sheetUrl = '1OwRtOAEUC-SqVk1brdcSTUs1PF771c2ZpnpAPmO-NZg';
+    a.sheetTag = '工作表1';
+    $.get('https://script.google.com/macros/s/AKfycbyrYjDKcUswV_9VADdmHZ7WHnT5KmBp13k0-1NNCcDQ9w8H463m/exec',a);
+  });
+});
+</script>
+</html>
