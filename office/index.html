@@ -1,11 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-tw">
 
 <head>
   <meta charset="UTF-8">
   <title>上下班刷卡</title>
   <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
   <style>
+  body,
+  html {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
   .column {
     margin: 20px 10px 10px;
   }
@@ -22,6 +30,12 @@
     margin: 18px 10px;
   }
   
+  .content {
+    display: table;
+    width: 100%;
+    max-width: 800px;
+  }
+  
   #showContent {
     line-height: 24px;
   }
@@ -29,6 +43,7 @@
   #show {
     margin: 10px;
     font-size: 14px;
+    width: 100%;
   }
   
   #show div {
@@ -36,6 +51,7 @@
     margin: 0;
     padding: 0;
     height: 28px;
+    width: 100%;
   }
   
   #show div.today {
@@ -61,8 +77,11 @@
     margin: 0 -1px 0 0;
     line-height: 28px;
     height: 100%;
-    width: 90px;
+    width: 25%;
+    max-width: 120px;
+    min-width: 90px;
     text-align: center;
+    box-sizing: border-box;
   }
   
   #show strong {
@@ -78,52 +97,67 @@
   #show div:last-child span {
     border-width: 1px;
   }
+  
+  @media print {
+    .column {
+      display: none;
+    }
+    .content {
+      margin-left:50px;
+    }
+    #show div {
+      font-size: 16px;
+      height: 32px;
+    }
+  }
   </style>
 </head>
 
 <body>
-  <div class="column">
-    <label>姓名</label>
-    <select id="userName" type="text">
-      <option value="許益祥 Marty"></option>
-      <option value="林玉玲 Lynn"></option>
-      <option value="柯名澤 Mingze"></option>
-      <option value="張宗彥 oxxo"></option>
-      <option value="黃聖原 Sheng"></option>
-      <option value="蘇宛儀 Enya"></option>
-      <option value="劉豪萱 Birte"></option>
-      <option value="吳怡萱 Didi"></option>
-      <option value="阿元 Yuan"></option>
-      <option value="郭晋良 Eric"></option>
-      <option value="吳哲瑜 Derek"></option>
-      <option value="黃懷萱 Beibei"></option>
-      <option value="蘇珈瑩 Jenny"></option>
-    </select>
-    <select id="selectYear">
-      <option value="2016">2016</option>
-      <option value="2017">2017</option>
-      <option value="2018">2018</option>
-    </select>
-    <label>年</label>
-    <select id="selectMonth">
-      <option value="01">1</option>
-      <option value="02">2</option>
-      <option value="03">3</option>
-      <option value="04">4</option>
-      <option value="05">5</option>
-      <option value="06">6</option>
-      <option value="07">7</option>
-      <option value="08">8</option>
-      <option value="09">9</option>
-      <option value="10">10</option>
-      <option value="11">11</option>
-      <option value="12">12</option>
-    </select>
-    <label>月</label>
-    <button id="submit">查詢</button>
-  </div>
-  <h2><span id="showName">...</span> 在 <span id="showMonth">...</span> 的出勤狀況</h2>
-  <div id="show">
+  <div class="content">
+    <div class="column">
+      <label>姓名</label>
+      <select id="userName" type="text">
+        <option value="許益祥 Marty"></option>
+        <option value="林玉玲 Lynn"></option>
+        <option value="柯名澤 Mingze"></option>
+        <option value="張宗彥 oxxo"></option>
+        <option value="黃聖原 Sheng"></option>
+        <option value="蘇宛儀 Enya"></option>
+        <option value="劉豪萱 Birte"></option>
+        <option value="吳怡萱 Didi"></option>
+        <option value="阿元 Yuan"></option>
+        <option value="郭晋良 Eric"></option>
+        <option value="吳哲瑜 Derek"></option>
+        <option value="黃懷萱 Beibei"></option>
+        <option value="蘇珈瑩 Jenny"></option>
+      </select>
+      <select id="selectYear">
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+      </select>
+      <label>年</label>
+      <select id="selectMonth">
+        <option value="01">1</option>
+        <option value="02">2</option>
+        <option value="03">3</option>
+        <option value="04">4</option>
+        <option value="05">5</option>
+        <option value="06">6</option>
+        <option value="07">7</option>
+        <option value="08">8</option>
+        <option value="09">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+      </select>
+      <label>月</label>
+      <button id="submit">查詢</button>
+    </div>
+    <h2><span id="showName">...</span> 在 <span id="showMonth">...</span> 的出勤狀況</h2>
+    <div id="show">
+    </div>
   </div>
   <script>
   var firebaseUrl = 'https://bell-card.firebaseio.com/';
@@ -156,7 +190,7 @@
       varDate = '0' + varDate;
     }
 
-    return [varYear,varMonth,varDate];
+    return [varYear, varMonth, varDate];
   }
   selectYear.value = get_time()[0];
   selectMonth.value = get_time()[1];
@@ -174,13 +208,13 @@
     for (var i = 0; i < 31; i++) {
       month[i] = '&nbsp;'; //先做一個長度為31的月份陣列，預設塞入空白字元
     }
-    showName.innerHTML = user[0] + ' ( ' + user[1] + ' )'; 
+    showName.innerHTML = user[0] + ' ( ' + user[1] + ' )';
     showMonth.innerHTML = t;
     show.innerHTML = '<i style="font-size:16px;">資料載入中...</i>';
     //載入 Firebase
     userFirebase.on("value", function(snapshot) {
       var val = [];
-      var date = get_time()[0]+''+get_time()[1]+get_time()[2];
+      var date = get_time()[0] + '' + get_time()[1] + get_time()[2];
       var check, week, d1, d2, kk, mm, yy;
       var m1 = [1, 3, 5, 7, 8, 10, 12]; //判斷大月小月和星期
       var m2 = [4, 6, 9, 11];
@@ -188,7 +222,7 @@
       snapshot.forEach(function(data) {
         val.push([data.key(), data.val()]);
       });
-      val.forEach(function(item, index){
+      val.forEach(function(item, index) {
         var a = val[index][0].substr(0, 6);
         var b = val[index][0].substr(6, 8) * 1 - 1;
         var c = val[index][1];
