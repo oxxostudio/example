@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-tw">
 
 <head>
   <meta charset="UTF-8">
   <title>無臉人</title>
-  <script src="webduino-all.min.js"></script>
-  <script src="webduino-blockly.js"></script>
+  <script src="https://webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
+  <script src="https://blockly.webduino.io/webduino-blockly.js"></script>
   <script>
   window.addEventListener('load', function() {
     var f = document.getElementById('f');
     var i = document.getElementById('i');
     var b = document.getElementById('b');
+    var trig = document.getElementById('trig');
+    var echo = document.getElementById('echo');
     var ultrasonic;
     b.onclick = function() {
       boardReady({
@@ -18,7 +20,7 @@
         multi: true
       }, function(board) {
         f.style.display = 'block';
-        ultrasonic = getUltrasonic(board, 11, 10);
+        ultrasonic = getUltrasonic(board, trig.value, echo.value);
         ultrasonic.ping(function(cm) {
           console.log(cm);
           if (cm >= 89) {
@@ -55,7 +57,6 @@
   	background:rgba(255,255,255,.3);
   }
   input{
-  	width:40px;
   	height:20px;
   }
   button{
@@ -70,12 +71,29 @@
     background-image: url(no-face-man.jpg);
     background-position: 0 0;
   }
+  #box{
+  	position:fixed;
+  	z-index:99;
+		top:0;
+		left:0;
+		color:#888;
+		font-size:12px;
+  }
+  #i{
+  	width:80px;
+  }
+  #trig,#echo{
+		width:30px;
+  }
   </style>
 </head>
 
 <body>
+	<div id="box">
   <input id="i" type="text" value="OVXD">
-  <button id="b">></button>
+  Trig: <input id="trig" value="11"> , Echo: <input id="echo" value="10">
+  <button id="b">連線</button>
+  </div>
   <div id="f"></div>
 </body>
 
