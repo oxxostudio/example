@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="js/jquery.min.js"></script>
+  <style>
+  h1 {
+    text-align: center;
+    font-size:20px;
+  }
+  
+  b {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 70px;
+    margin: 10px;
+    padding: 5px 10px 10px;
+    border-right: 1px solid #ccc;
+    vertical-align: top;
+    float: left;
+    color: #000;
+    font-weight: bold;
+  }
+  
+  a {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 150px;
+    margin: 10px 10px 10px 5px;
+    padding: 5px 10px 10px 5px;
+    border-right: 1px solid #ccc;
+    vertical-align: top;
+    float: left;
+    color: #069;
+    font-weight: bold;
+  }
+  
+  span {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    border: none;
+    padding: 5px 5px 10px;
+    margin: 10px;
+    border-left: none;
+    float: left;
+    width: calc(100% - 300px);
+  }
+  
+  #show div {
+    position: relative;
+    display: table;
+    border-top: 1px dotted #ccc;
+    width: 100%;
+    font-size:14px;
+  }
+  </style>
+</head>
+
+<body>
+  <h1></h1>
+  <div id='show'></div>
+  <script>
+  var pageUrl = location.href;
+  var json = pageUrl.split('#')[1];
+
+  var $show = $('#show');
+  $.getJSON(json + '.json', function(e) {
+    var cards = e.cards;
+    var actions = e.actions;
+    var lists = e.lists;
+    var shortUrlArr = [];
+    var cardsArr = [];
+    var descArr = [];
+    var actionArr = [];
+    var listArr = [];
+
+    $('h1').text(e.name);
+
+    for (var i in cards) {
+      cardsArr.push(cards[i].name);
+      shortUrlArr.push(cards[i].shortUrl);
+      descArr.push(cards[i].desc);
+      var idMemberCreator = cards[i].id;
+      var commentArr = [];
+      for (var k in lists) {
+        if (cards[i].idList == lists[k].id) {
+          listArr.push(lists[k].name);
+        }
+      }
+      for (var j in actions) {
+        if (actions[j].data.card) {
+          if (actions[j].data.card.id == idMemberCreator && actions[j].type == 'commentCard') {
+            commentArr.push(actions[j].data.text);
+          }
+        }
+      }
+      actionArr.push(commentArr);
+    }
+    cardsArr.forEach(function(e, i) {
+      $show.append('<div><b>' + listArr[i] + '</b><a href="' + shortUrlArr[i] + '" target="_blank">' + e + '</a><span>' + actionArr[i] + '</span></div>');
+    });
+  });
+  </script>
+</body>
+
+</html>
