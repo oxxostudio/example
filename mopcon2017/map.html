@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <meta charset="UTF-8">
+  <title id="title">地圖打卡</title>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/webduino-all.min.js"></script>
+  <script src="js/webduino-blockly.js"></script>
+  <style>
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+  <script>
+  var map;
+  var s = 0;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {
+        lat: 22.626538,
+        lng: 120.285696
+      },
+      zoom: 17
+    });
+
+    var infowindow = new google.maps.InfoWindow({
+      content: '<b style="font-size:30px;">Webduino 祝 MOPCON 打卡啦！</b>'
+    });
+
+    boardReady({
+      // board: 'Smart',
+      // url: '192.168.9.103'
+      board: 'Smart',
+      device: '10b49J1r',
+      transport: 'mqtt'
+    }, true, function(board) {
+      board.systemReset();
+      board.samplingInterval = 250;
+      rfid = getRFID(board);
+      $('#title').text('ok');
+      rfid.read();
+      rfid.on("enter", function(uid) {
+        s = 1;
+        console.log(uid);
+        map.setZoom(17);
+        infowindow.setContent('<b style="font-size:16px;">Webduino 祝大家來 MOPCON 學到很多好東西！</b>');
+        if (uid == '76823914') {
+          var marker = new google.maps.Marker({
+            position: {
+              lat: 22.626538,
+              lng: 120.285696
+            },
+            map: map,
+            title: 'Hello World!'
+          });
+          infowindow.open(map, marker);
+        } else if (uid == '90A89F5C') {
+          var marker = new google.maps.Marker({
+            position: {
+              lat: 22.626538,
+              lng: 120.285696
+            },
+            map: map,
+            title: 'Hello World!'
+          });
+          infowindow.open(map, marker);
+          map.setZoom(19);
+          infowindow.setContent('<b style="font-size:60px;">Webduino 祝大家<br/>來 MOPCON <br/>學到很多好東西！</b>');
+        }
+      });
+    });
+
+    // setTimeout(function() {
+    //   if (s == 0) {
+    //     var marker = new google.maps.Marker({
+    //       position: {
+    //         lat: 22.626538,
+    //         lng: 120.285696
+    //       },
+    //       map: map,
+    //       title: 'Hello World!'
+    //     });
+    //     infowindow.open(map, marker);
+    //     map.setZoom(19);
+    //     infowindow.setContent('<b style="font-size:60px;">Webduino 祝大家<br/>來 MOPCON <br/>學到很多好東西！</b>');
+    //   }
+    // }, 10000);
+
+
+  }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYBMYS-eSUwFL3Z1cn5P2bNWrVIr27Cgc&callback=initMap" async defer></script>
+</body>
+
+</html>

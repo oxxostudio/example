@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <meta charset="UTF-8">
+  <title>卡片控制電燈</title>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/webduino-all.min.js"></script>
+  <script src="js/webduino-blockly.js"></script>
+  <style>
+  body,
+  html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .color {
+    width: 100%;
+    height: 100%;
+    font-size:160px;
+    line-height:120px;
+    color:#fff;
+    text-align: center;
+    font-weight: bold;
+    padding-top:100px;
+    box-sizing: border-box;
+  }
+  i{
+    font-size:80px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="color">一起來點燈<br/><i>( 徵求小幫手 )</i></div>
+</body>
+<script>
+var $color = $('.color'); 
+var rfid;
+var rgbled = {};
+var rgbledState = {};
+var timeout = {};
+var poker = {
+  '8AD81F2B': '方塊 A',
+  'DEA51E2B': '梅花 A',
+  '63481B2B': '紅心 A',
+  '3C4B202B': '黑桃 A',
+  '70FE212B': '藍色',
+  'DA003BD5': '紅色',
+  '700348D5': '綠色',
+  '43B01F2B': '閃爍',
+  '7B4B1B2B': '小',
+  'CCFF1A2B': '大',
+  '2D0542D5': '鬼',
+  '2334D700': '黑桃 2',
+  'A04040D5': '黑桃 3',
+  '933D5902': '黑桃 4',
+  '5CF61A2B': '黑桃 5',
+  '76823914': '尖叫雞',
+  '4B14202B': '聲控'
+};
+var smartArr = ['10yGJXWd', '10dgkr2d', '10grlbMq', '10yMpDbd', '10dkR8KQ', '10dxL48d', '10yj5Aad', '10VKjvJy'];
+var arr = ['10b49J1r', '10RrGGer'];
+var vv = 0;
+
+var blink = {};
+var bbb = 0;
+var clearbb;
+
+boardReady({
+  board: 'Smart',
+  device: '10b49J1r',
+  transport: 'mqtt'
+}, true, function(board) {
+  console.log('RFID Ready...');
+  board.systemReset();
+  board.samplingInterval = 100;
+  rfid = getRFID(board);
+  rfid.read();
+  rfid.on("enter", function(uid) {
+    console.log(uid, poker[uid]);
+    smartArr.forEach(function(e) {
+      clear(e);
+    });
+    if (uid == 'DA003BD5') {
+      $color.css({
+        'background': '#f00'
+      });
+      smartArr.forEach(function(e) {
+        if (rgbled[e]) {
+          rgbled[e].setColor('#ff0000');
+        }
+      });
+    } else if (uid == '700348D5') {
+      $color.css({
+        'background': '#0f0'
+      });
+      smartArr.forEach(function(e) {
+        if (rgbled[e]) {
+          rgbled[e].setColor('#00ff00');
+        }
+      });
+    } else if (uid == '70FE212B') {
+      $color.css({
+        'background': '#00f'
+      });
+      smartArr.forEach(function(e) {
+        if (rgbled[e]) {
+          rgbled[e].setColor('#0000ff');
+        }
+      });
+    } else if (uid == '43B01F2B') {
+      bb();
+      smartArr.forEach(function(e) {
+        if (rgbled[e]) {
+          blink[e]();
+        }
+      });
+    } else if (uid == '4B14202B' && vv == 0) {
+      speechRecognition(smartArr);
+    } else {
+      $color.css({
+        'background': '#000',
+        'color': '#fff'
+      });
+      smartArr.forEach(function(e) {
+        if (rgbled[e]) {
+          rgbled[e].setColor('#000000');
+        }
+      });
+    }
+  });
+});
+
+smartArr.forEach(function(e) {
+  boardReady({
+    board: 'Smart',
+    device: e,
+    transport: 'mqtt'
+  }, true, function(board) {
+    console.log(e + 'Ready...');
+    board.systemReset();
+    board.samplingInterval = 100;
+    rgbledState[e] = 0;
+    rgbled[e] = getRGBLedCathode(board, 15, 12, 13);
+  });
+});
+
+smartArr.forEach(function(e) {
+  blink[e] = function() {
+    console.log(e, rgbledState[e]);
+    if (rgbledState[e] == 0) {
+      rgbledState[e] = 1;
+      rgbled[e].setColor('#ffffff');
+    } else {
+      rgbledState[e] = 0;
+      rgbled[e].setColor('#000000');
+    }
+    timeout[e] = setTimeout(blink[e], 250);
+  }
+});
+
+function bb() {
+  if (bbb == 0) {
+    bbb = 1;
+    $color.css({
+      'background': '#fff',
+      'color': '#000'
+    });
+  } else {
+    bbb = 0;
+    $color.css({
+      'background': '#000',
+      'color': '#fff'
+    });
+  }
+  clearbb = setTimeout(bb, 250);
+}
+
+function clear(e) {
+  clearTimeout(clearbb);
+  if (timeout[e]) {
+    clearTimeout(timeout[e]);
+    rgbledState[e] = 0;
+    $color.css({
+      'background': '#000'
+    });
+  }
+}
+
+function speechRecognition(smartArr) {
+  if (!("webkitSpeechRecognition" in window)) {
+    alert("本瀏覽器不支援語音辨識，請更換瀏覽器！(Chrome 25 版以上才支援語音辨識)");
+  } else {
+    vv = 1;
+    window._recognition = new webkitSpeechRecognition();
+    window._recognition.continuous = true;
+    window._recognition.interimResults = true;
+    window._recognition.lang = "cmn-Hant-TW";
+
+    window._recognition.onstart = function() {
+      window._recognition.status = true;
+      console.log("Start recognize...");
+    };
+
+    window._recognition.onend = function() {
+      console.log("Stop recognize");
+      if (window._recognition.status) {
+        window._recognition.start();
+      }
+    };
+
+    window._recognition.onresult = function(event, result) {
+      result = {};
+      result.resultLength = event.results.length - 1;
+      result.resultTranscript = event.results[result.resultLength][0].transcript;
+      if (event.results[result.resultLength].isFinal === false) {
+        console.log(result.resultTranscript);
+        if (result.resultTranscript.indexOf("開燈") !== -1) {
+          $color.css({
+            'background': '#fff'
+          });
+          smartArr.forEach(function(e) {
+            clear(e);
+            rgbled[e].setColor('#ffffff');
+          });
+        }
+        if (result.resultTranscript.indexOf("關燈") !== -1) {
+          $color.css({
+            'background': '#000'
+          });
+          smartArr.forEach(function(e) {
+            clear(e);
+            rgbled[e].setColor('#000000');
+          });
+        }
+      } else if (event.results[result.resultLength].isFinal === true) {
+        console.log("final");
+      }
+    };
+    window._recognition.start();
+  }
+}
+</script>
+
+</html>

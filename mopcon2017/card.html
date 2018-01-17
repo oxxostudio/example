@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <meta charset="UTF-8">
+  <title>一起操控圖卡</title>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/webduino-all.min.js"></script>
+  <script src="js/webduino-blockly.js"></script>
+  <style>
+  body {
+    padding: 10px 50px;
+    text-align: center;
+  }
+  
+  .light {
+    margin: 5px;
+    width: 180px;
+    height: 180px;
+    display: inline-block;
+    text-align: center;
+    line-height: 180px;
+    font-size: 150px;
+    background: #f50;
+    border-radius:20px;
+    color:#fff;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="light">1</div>
+  <div class="light">2</div>
+  <div class="light">3</div>
+  <div class="light">4</div>
+  <br/>
+  <div class="light">5</div>
+  <div class="light">6</div>
+  <div class="light">7</div>
+  <div class="light">8</div>
+</body>
+<script>
+var rfid;
+var rgbled = {};
+var rgbledState = {};
+var photocell = {};
+var timeout = {};
+var smartArr = ['10yGJXWd', '10dgkr2d', '10grlbMq', '10yMpDbd', '10dkR8KQ', '10dxL48d', '10yj5Aad', '10VKjvJy'];
+
+
+smartArr.forEach(function(e, index) {
+  boardReady({
+    board: 'Smart',
+    device: e,
+    transport: 'mqtt'
+  }, true, function(board) {
+    board.systemReset();
+    board.samplingInterval = 250;
+    console.log(index + ',' + e + 'Ready...');
+    photocell[e] = getPhotocell(board, 0);
+    photocell[e].on(function(val) {
+      var o = Math.round(val * 2 * 100)/100;
+      if (o > 1) {
+        o = 1
+      }
+      console.log(o);
+      $('.light').eq(index - 1).css({
+        'opacity': o
+      });
+    });
+  });
+});
+</script>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Webduino 範例展示</title>
+  <script src="js/jquery.min.js"></script>
+  <style>
+  body,
+  html {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: #000;
+  }
+  
+  iframe {
+    width: 100%;
+    height: calc(100% - 30px);
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .btn {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    z-index: 9999;
+    height: 30px;
+    line-height: 30px;
+    text-align: right;
+    font-size: 13px;
+  }
+  
+  .btn span {
+    display: inline-block;
+    color: #666;
+    cursor: pointer;
+    padding: 0 10px 0 0;
+  }
+  
+  .btn span:hover {
+    color: #999;
+  }
+  
+  .btn b {
+    position: absolute;
+    left: 10px;
+    color: #666;
+    font-weight: normal;
+  }
+  </style>
+</head>
+
+<body>
+  <iframe src="#" frameborder=0></iframe>
+  <div class="btn">
+    <b class="page">1</b>
+    <span class="btn-back">上一頁</span>
+    <span class="btn-next">下一頁</span>
+  </div>
+</body>
+<script>
+var hash = location.href.split('#')[1];
+var $back = $('.btn-back');
+var $next = $('.btn-next');
+var $iframe = $('iframe');
+var $page = $('.page');
+if (!hash) {
+  pageNum = 0;
+} else {
+  pageNum = hash;
+}
+var pageArr = [
+  'page-01.html', //智慧電燈標題
+  'https://goo.gl/irVJWa', //點燈 http://blockly.webduino.io/?demo=demo-area-02#-L322Edr75RKVZAjgQ4P
+  'https://goo.gl/bbyUR9', //人臉 https://blockly.webduino.io/?demo=demo-area-08#-L322Sf1_WoOdac7Y4ul
+  'https://goo.gl/639dFY', //聲控 https://blockly.webduino.io/?demo=demo-area-01#-L323VDBSL_XhYia3P-k
+  'map2.html',
+  'page-02.html',
+  'poker1.html',
+  'https://goo.gl/V8cYCD',
+  // 'all.html',
+  // 'page-03.html',
+  // 'card.html',
+  // 'chart.html',
+   'page-04.html'
+];
+f();
+$next.on('click', function() {
+  pageNum = pageNum * 1 + 1;
+  if (pageNum >= pageArr.length) {
+    pageNum = 0;
+  }
+  f();
+});
+$back.on('click', function() {
+  pageNum = pageNum * 1 - 1;
+  if (pageNum < 0) {
+    pageNum = pageArr.length - 1;
+  }
+  f();
+});
+
+function f() {
+  console.log(pageNum, pageArr[pageNum]);
+  $page.text(pageNum * 1 + 1);
+  $iframe.attr('src', pageArr[pageNum]);
+  window.location.hash = pageNum;
+}
+
+document.onkeydown = function(e){
+  if (e.keyCode == 39) {
+    pageNum = pageNum * 1 + 1;
+    if (pageNum >= pageArr.length) {
+      pageNum = 0;
+    }
+    f();
+  } else if (e.keyCode == 37) {
+    pageNum = pageNum * 1 - 1;
+    if (pageNum < 0) {
+      pageNum = pageArr.length - 1;
+    }
+    f();
+  }
+}
+</script>
+
+</html>

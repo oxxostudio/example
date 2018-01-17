@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>光線圖表</title>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/webduino-all.min.js"></script>
+  <script src="js/webduino-blockly.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <style>
+  body,
+  html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #curve_chart {
+    width: 95%;
+    height: 95%;
+    margin: 0 auto;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="curve_chart"></div>
+</body>
+<script>
+var rfid;
+var rgbled = {};
+var photocell = {};
+var smartArr = ['10yGJXWd', '10dgkr2d', '10grlbMq', '10yMpDbd', '10dkR8KQ', '10dxL48d', '10yj5Aad', '10VKjvJy'];
+//var socketArr = ['5','4', '9', '3', '7', '6', '8', '2'];
+var socketArr = ['demo33','demo32', 'demo31', 'demo30', 'demo29', 'demo28', 'demo27', 'demo26'];
+
+var oarr = ['0', 0, 0, 0, 0, 0, 0, 0, 0];
+var bb = [];
+bb[0] = ['Time', 'demo33','demo32', 'demo31', 'demo30', 'demo29', 'demo28', 'demo27', 'demo26'];
+
+smartArr.forEach(function(e, index) {
+  boardReady({
+    board: 'Smart',
+    device: e,
+    transport: 'mqtt'
+  }, true, function(board) {
+    board.systemReset();
+    board.samplingInterval = 250;
+    console.log(index + ',' + e + 'Ready...');
+    photocell[e] = getPhotocell(board, 0);
+    photocell[e].on(function(val) {
+      var o = Math.round(val * 2 * 100) / 100;
+      if (o > 1) {
+        o = 1;
+      }
+      oarr[index + 1] = o;
+      $('.light').eq(index - 1).css({
+        'opacity': o
+      });
+    });
+    board.on('error', function(err) {
+      oarr[index + 1] = 0;
+    });
+  });
+});
+
+
+google.charts.load('current', {
+  'packages': ['corechart']
+});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+  var data = google.visualization.arrayToDataTable(bb);
+
+  var options = {
+    title: 'Company Performance',
+    curveType: 'function',
+    legend: {
+      position: 'bottom'
+    },
+    chartArea: {
+      width: '100%'
+    }
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+  chart.draw(data, options);
+
+  var aa = 1;
+  setInterval(function() {
+    if (oarr.length == bb[0].length) {
+      var d = new Date();
+      var h = d.getHours();
+      var m = d.getMinutes();
+      var s = d.getSeconds();
+      oarr[0] = h + ':' + m + ':' + s;
+      console.log(oarr);
+      bb[aa] = [];
+      oarr.forEach(function(e, index) {
+        bb[aa][index] = e;
+      });
+      console.log(bb);
+      data = google.visualization.arrayToDataTable(bb);
+      chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      chart.draw(data, options);
+      console.log(bb.length);
+      if (bb.length > 20) {
+        bb.splice(1, 1);
+        aa = 20;
+      } else {
+        aa = aa + 1;
+      }
+    }
+  }, 500);
+}
+</script>
+
+</html>
