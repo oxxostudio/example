@@ -1,0 +1,80 @@
+html,body{
+    width:100%;
+    height:100%;
+    padding:0;
+    margin:0;
+}
+body{
+    background:#666;
+}
+div, input, textarea{
+    box-sizing: border-box;
+}
+.container{
+    display:table;
+    margin:20px auto;
+    padding:20px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow: #000 0 10px 50px;
+}
+.container div{
+    margin:10px 5px;
+}
+.container div b{
+    display:inline-block;
+    width:100px;
+    text-align: right;
+    vertical-align: middle;
+}
+input{
+    margin-left:8px;
+    padding:5px;
+    font-size:15px;
+    width:500px;
+    border:1px solid #999;
+    border-radius:3px;
+    vertical-align: middle;
+    transition:.2s;
+}
+input:focus{
+    box-shadow:none;
+    outline: none;
+    border:1px solid #9cf;
+    box-shadow:#9cf 0 0 0 3px;
+}
+input.user{
+    width:190px;
+}
+textarea{
+    margin-left:8px;
+    padding:5px;
+    font-size:15px;
+    vertical-align: middle;
+    width:500px;
+    height:300px;
+    border:1px solid #999;
+    border-radius:3px;
+    transition:.2s;
+}
+textarea:focus{
+    outline: none;
+    border:1px solid #9cf;
+    box-shadow:#9cf 0 0 0 3px;
+}
+
+button{
+    width:620px;
+    background:#9cf;
+    font-size:18px;
+    padding:15px;
+    border-radius:5px;
+    margin-top:20px;
+    outline: none;
+    box-shadow:none;
+    border:none;
+    cursor:pointer;
+}
+button:active{
+    background:#bdf;
+}

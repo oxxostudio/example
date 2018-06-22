@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <b>帳號</b>
+            <input id="uid" type="text" class="user">
+            <b>密碼</b>
+            <input id="pwd" type="password" class="user">
+        </div>
+        <div>
+            <b>寄件人名稱</b>
+            <input id="name" type="text" value="Webduino">
+        </div>
+        <div>
+            <b>標題</b>
+            <input id="title" type="text">
+        </div>
+        <div>
+            <b>HTML 內容</b>
+            <textarea id="content" type="text"></textarea>
+        </div>
+        <div>
+            <b>廣告活動名稱</b>
+            <input id="cn" type="text">
+        </div>
+        <div>
+            <b>廣告活動來源</b>
+            <input id=utmSource type="text">
+        </div>
+        <div>
+            <b>收件者清單</b>
+            <input id="sheetUrl" type="text">
+        </div>
+        <div>
+            <b>工作表名稱</b>
+            <input id="sheetName" type="text">
+        </div>
+        <button id="send">開始寄信</button>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script>
+    var $uid = $('#uid');
+    var $pwd = $('#pwd');
+    var $name = $('#name');
+    var $title = $('#title');
+    var $content = $('#content');
+    var $cn = $('#cn');
+    var $utmSource = $('#utmSource');
+    var $sheetUrl = $('#sheetUrl');
+    var $sheetName = $('#sheetName');
+    var $send = $('#send');
+
+    if(localStorage.uid){$uid.val(localStorage.uid);}
+    if(localStorage.pwd){$pwd.val(localStorage.pwd);}
+    if(localStorage.name){$name.val(localStorage.name);}
+    if(localStorage.title){$title.val(localStorage.title);}
+    if(localStorage.content){$content.val(localStorage.content);}
+    if(localStorage.cn){$cn.val(localStorage.cn);}
+    if(localStorage.utmSource){$utmSource.val(localStorage.utmSource);}
+    if(localStorage.sheetUrl){$sheetUrl.val(localStorage.sheetUrl);}
+    if(localStorage.sheetName){$sheetName.val(localStorage.sheetName);}
+
+    $('input, textarea').change(function(){
+        localStorage.uid = $uid.val();
+        localStorage.pwd = $pwd.val();
+        localStorage.name = $name.val();
+        localStorage.title = $title.val();
+        localStorage.content = $content.val();
+        localStorage.cn = $cn.val();
+        localStorage.utmSource = $utmSource.val();
+        localStorage.sheetUrl = $sheetUrl.val();
+        localStorage.sheetName = $sheetName.val();
+    });
+
+    $send.on('click', function () {
+        var data = {
+            uid: $uid.val(),
+            pwd: $pwd.val(),
+            name: $name.val(),
+            title: $title.val(),
+            content: $content.val(),
+            cn: $cn.val(),
+            utmSource: $utmSource.val(),
+            sheetUrl: $sheetUrl.val(),
+            sheetName: $sheetName.val()
+        };
+        var check = confirm("確定沒問題了嗎？\n要寄信囉～");
+        if (check == true) {
+            $send.attr('disabled', true);
+            $send.text('寄信中...');
+            $send.css({ 'opacity': '0.5' });
+            $.ajax({
+                url: 'https://script.google.com/macros/s/AKfycbwjIpGZAqyTHyFDrq7yOWd0z47tAnyVY3DScSN9huNDDsk5p0e_/exec',
+                type: "POST",
+                dataType: "html",
+                data: data,
+                success: function (e) {
+                    console.log(e);
+                    $send.attr('disabled', false);
+                    $send.text('開始寄信');
+                    $send.css({ 'opacity': '1' });
+                    alert(e);
+                },
+                error: function () {
+                    $send.attr('disabled', false);
+                    $send.text('開始寄信');
+                    $send.css({ 'opacity': '1' });
+                    alert('發生錯誤啦！！！！！');
+                }
+            });
+        }
+    });
+
+</script>
+
+</html>
