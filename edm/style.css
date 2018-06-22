@@ -5,7 +5,9 @@ html,body{
     margin:0;
 }
 body{
-    background:#666;
+    background-image:url(bg.jpg);
+    background-size:100% auto;
+    background-attachment:fixed;
 }
 div, input, textarea{
     box-sizing: border-box;
@@ -15,7 +17,7 @@ div, input, textarea{
     margin:20px auto;
     padding:20px;
     background:#fff;
-    border-radius:10px;
+    border-radius:5px;
     box-shadow: #000 0 10px 50px;
 }
 .container div{
@@ -43,7 +45,7 @@ input:focus{
     border:1px solid #9cf;
     box-shadow:#9cf 0 0 0 3px;
 }
-input.user{
+input.user, input.campaign{
     width:190px;
 }
 textarea{
