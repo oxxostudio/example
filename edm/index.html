@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="oxxo.studio">
+    <meta name="copyright" content="oxxo.studio">
     <title>EDM</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -63,12 +65,13 @@
                 <b>密碼</b>
                 <input id="pwd" type="password" class="user">
             </div>
+            <button class="send top">寄信</button>
         </div>
         <div class="content">
             <h3>信件 HTML 內容</h3>
             <textarea id="content" type="text"></textarea>
         </div>
-        <button id="send">寄信</button>
+        <button class="send bottom">寄信</button>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
@@ -82,7 +85,7 @@
     var $utmSource = $('#utmSource');
     var $sheetUrl = $('#sheetUrl');
     var $sheetName = $('#sheetName');
-    var $send = $('#send');
+    var $send = $('.send');
 
     if (localStorage.uid) { $uid.val(localStorage.uid); }
     if (localStorage.pwd) { $pwd.val(localStorage.pwd); }
@@ -121,7 +124,7 @@
         var check = confirm("確定沒問題了嗎？\n要寄信囉～");
         if (check == true) {
             $send.attr('disabled', true);
-            $send.text('寄信中');
+            $send.text('寄信中...');
             $send.css({ 'opacity': '0.5' });
             $.ajax({
                 url: 'https://script.google.com/macros/s/AKfycbwjIpGZAqyTHyFDrq7yOWd0z47tAnyVY3DScSN9huNDDsk5p0e_/exec',
