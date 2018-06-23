@@ -121,7 +121,7 @@ div, input, textarea, header{
     border:1px solid #bbb;
     border-radius:3px;
     transition:.2s;
-    resize: none;
+    resize: vertical;
 }
 .container textarea:focus{
     outline: none;
