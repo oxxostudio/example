@@ -10,40 +10,64 @@
 </head>
 
 <body>
+    <div class="logo">
+        <header>來發電子報</header>
+        <img src="logo.jpg">
+        <div class="note">
+            <h3>使用說明</h3>
+            <div>「來發電子報」可以自動寄發電子信，同時具備追蹤開信、點閱連結的功能。</div>
+            <div>
+                <b>自動寄信：</b>收件者清單填入試算表網址，在 A 列寫入寄件清單，點選開始寄信就會自動寄發。</div>
+            <div>
+                <b>連結追蹤：</b>在欲追蹤的連結後方加上
+                <i>{{tracking}}</i> 的標記。</div>
+            <div>
+                <b>開信追蹤：</b>每封信都會自動追蹤，可額外指定活動名稱與來源。</div>
+        </div>
+    </div>
     <div class="container">
-        <div>
-            <b>帳號</b>
-            <input id="uid" type="text" class="user">
-            <b>密碼</b>
-            <input id="pwd" type="password" class="user">
+        <header></header>
+        <div class="info">
+            <h3>資訊設定</h3>
+            <div>
+                <b>寄件人名稱</b>
+                <input id="name" type="text" value="Webduino">
+            </div>
+            <div>
+                <b>標題</b>
+                <input id="title" type="text">
+            </div>
+            <div>
+                <b>活動名稱</b>
+                <input id="cn" type="text" class="campaign">
+            </div>
+            <div>
+                <b>活動來源</b>
+                <input id=utmSource type="text" class="campaign">
+            </div>
+            <div>
+                <b>收件者清單</b>
+                <input id="sheetUrl" type="text">
+            </div>
+            <div>
+                <b>工作表名稱</b>
+                <input id="sheetName" type="text">
+            </div>
+            <h3>安全性設定</h3>
+            <div>
+                <b>帳號</b>
+                <input id="uid" type="text" class="user">
+            </div>
+            <div>
+                <b>密碼</b>
+                <input id="pwd" type="password" class="user">
+            </div>
         </div>
-        <div>
-            <b>寄件人名稱</b>
-            <input id="name" type="text" value="Webduino">
-        </div>
-        <div>
-            <b>標題</b>
-            <input id="title" type="text">
-        </div>
-        <div>
-            <b>HTML 內容</b>
+        <div class="content">
+            <h3>信件 HTML 內容</h3>
             <textarea id="content" type="text"></textarea>
         </div>
-        <div>
-            <b>活動名稱</b>
-            <input id="cn" type="text" class="campaign">
-            <b>活動來源</b>
-            <input id=utmSource type="text" class="campaign">
-        </div>
-        <div>
-            <b>收件者清單</b>
-            <input id="sheetUrl" type="text">
-        </div>
-        <div>
-            <b>工作表名稱</b>
-            <input id="sheetName" type="text">
-        </div>
-        <button id="send">開始寄信</button>
+        <button id="send">寄信</button>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
@@ -59,17 +83,17 @@
     var $sheetName = $('#sheetName');
     var $send = $('#send');
 
-    if(localStorage.uid){$uid.val(localStorage.uid);}
-    if(localStorage.pwd){$pwd.val(localStorage.pwd);}
-    if(localStorage.name){$name.val(localStorage.name);}
-    if(localStorage.title){$title.val(localStorage.title);}
-    if(localStorage.content){$content.val(localStorage.content);}
-    if(localStorage.cn){$cn.val(localStorage.cn);}
-    if(localStorage.utmSource){$utmSource.val(localStorage.utmSource);}
-    if(localStorage.sheetUrl){$sheetUrl.val(localStorage.sheetUrl);}
-    if(localStorage.sheetName){$sheetName.val(localStorage.sheetName);}
+    if (localStorage.uid) { $uid.val(localStorage.uid); }
+    if (localStorage.pwd) { $pwd.val(localStorage.pwd); }
+    if (localStorage.name) { $name.val(localStorage.name); }
+    if (localStorage.title) { $title.val(localStorage.title); }
+    if (localStorage.content) { $content.val(localStorage.content); }
+    if (localStorage.cn) { $cn.val(localStorage.cn); }
+    if (localStorage.utmSource) { $utmSource.val(localStorage.utmSource); }
+    if (localStorage.sheetUrl) { $sheetUrl.val(localStorage.sheetUrl); }
+    if (localStorage.sheetName) { $sheetName.val(localStorage.sheetName); }
 
-    $('input, textarea').change(function(){
+    $('input, textarea').change(function () {
         localStorage.uid = $uid.val();
         localStorage.pwd = $pwd.val();
         localStorage.name = $name.val();
@@ -96,7 +120,7 @@
         var check = confirm("確定沒問題了嗎？\n要寄信囉～");
         if (check == true) {
             $send.attr('disabled', true);
-            $send.text('寄信中...');
+            $send.text('寄信中');
             $send.css({ 'opacity': '0.5' });
             $.ajax({
                 url: 'https://script.google.com/macros/s/AKfycbwjIpGZAqyTHyFDrq7yOWd0z47tAnyVY3DScSN9huNDDsk5p0e_/exec',
@@ -106,13 +130,13 @@
                 success: function (e) {
                     console.log(e);
                     $send.attr('disabled', false);
-                    $send.text('開始寄信');
+                    $send.text('寄信');
                     $send.css({ 'opacity': '1' });
                     alert(e);
                 },
                 error: function () {
                     $send.attr('disabled', false);
-                    $send.text('開始寄信');
+                    $send.text('寄信');
                     $send.css({ 'opacity': '1' });
                     alert('發生錯誤啦！！！！！');
                 }
