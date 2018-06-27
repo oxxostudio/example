@@ -87,8 +87,6 @@
     var $sheetName = $('#sheetName');
     var $send = $('.send');
 
-    if (localStorage.uid) { $uid.val(localStorage.uid); }
-    if (localStorage.pwd) { $pwd.val(localStorage.pwd); }
     if (localStorage.name) { $name.val(localStorage.name); }
     if (localStorage.title) { $title.val(localStorage.title); }
     if (localStorage.content) { $content.val(localStorage.content); }
@@ -98,8 +96,6 @@
     if (localStorage.sheetName) { $sheetName.val(localStorage.sheetName); }
 
     $('input, textarea').change(function () {
-        localStorage.uid = $uid.val();
-        localStorage.pwd = $pwd.val();
         localStorage.name = $name.val();
         localStorage.title = $title.val();
         localStorage.content = $content.val();
@@ -123,6 +119,8 @@
         };
         var check = confirm("確定沒問題了嗎？\n要寄信囉～");
         if (check == true) {
+            $uid.val('');
+            $pwd.val('');
             $send.attr('disabled', true);
             $send.text('寄信中...');
             $send.css({ 'opacity': '0.5', 'pointer-events': 'none', 'cursor': 'not-allowed' });
