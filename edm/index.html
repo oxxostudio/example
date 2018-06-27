@@ -125,7 +125,7 @@
         if (check == true) {
             $send.attr('disabled', true);
             $send.text('寄信中...');
-            $send.css({ 'opacity': '0.5' });
+            $send.css({ 'opacity': '0.5', 'pointer-events': 'none', 'cursor': 'not-allowed' });
             $.ajax({
                 url: 'https://script.google.com/macros/s/AKfycbwjIpGZAqyTHyFDrq7yOWd0z47tAnyVY3DScSN9huNDDsk5p0e_/exec',
                 type: "POST",
@@ -135,13 +135,13 @@
                     console.log(e);
                     $send.attr('disabled', false);
                     $send.text('寄信');
-                    $send.css({ 'opacity': '1' });
+                    $send.css({ 'opacity': '1', 'pointer-events': 'auto', 'cursor': 'pointer' });
                     alert(e);
                 },
                 error: function () {
                     $send.attr('disabled', false);
                     $send.text('寄信');
-                    $send.css({ 'opacity': '1' });
+                    $send.css({ 'opacity': '1', 'pointer-events': 'auto', 'cursor': 'pointer' });
                     alert('發生錯誤啦！！！！！');
                 }
             });
