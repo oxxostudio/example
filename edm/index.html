@@ -45,8 +45,8 @@
                 <input id="cn" type="text" class="campaign">
             </div>
             <div>
-                <b>活動來源</b>
-                <input id=utmSource type="text" class="campaign">
+                <b>活動媒介</b>
+                <input id="utmMedium" type="text" class="campaign">
             </div>
             <div>
                 <b>收件者清單</b>
@@ -82,7 +82,7 @@
     var $title = $('#title');
     var $content = $('#content');
     var $cn = $('#cn');
-    var $utmSource = $('#utmSource');
+    var $utmMedium = $('#utmMedium');
     var $sheetUrl = $('#sheetUrl');
     var $sheetName = $('#sheetName');
     var $send = $('.send');
@@ -91,7 +91,7 @@
     if (localStorage.title) { $title.val(localStorage.title); }
     if (localStorage.content) { $content.val(localStorage.content); }
     if (localStorage.cn) { $cn.val(localStorage.cn); }
-    if (localStorage.utmSource) { $utmSource.val(localStorage.utmSource); }
+    if (localStorage.utmMedium) { $utmMedium.val(localStorage.utmMedium); }
     if (localStorage.sheetUrl) { $sheetUrl.val(localStorage.sheetUrl); }
     if (localStorage.sheetName) { $sheetName.val(localStorage.sheetName); }
 
@@ -100,7 +100,7 @@
         localStorage.title = $title.val();
         localStorage.content = $content.val();
         localStorage.cn = $cn.val();
-        localStorage.utmSource = $utmSource.val();
+        localStorage.utmMedium = $utmMedium.val();
         localStorage.sheetUrl = $sheetUrl.val();
         localStorage.sheetName = $sheetName.val();
     });
@@ -113,7 +113,7 @@
             title: $title.val(),
             content: $content.val(),
             cn: $cn.val(),
-            utmSource: $utmSource.val(),
+            utmMedium: $utmMedium.val(),
             sheetUrl: $sheetUrl.val(),
             sheetName: $sheetName.val()
         };
