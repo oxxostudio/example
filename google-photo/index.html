@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Google Photo's Url</title>
+    <style>
+        html,body{
+            margin:0;
+            padding:0;
+            font-size:15px;
+        }
+        select, button{
+            font-size:15px;
+        }
+        #shareUrl{
+            width:400px;
+            padding:3px 5px;
+            font-size:15px;
+        }
+        div{
+            box-sizing: border-box;
+            margin:0;
+            padding:20px 20px 0;
+            max-width:100%;
+        }
+        #d img{
+            max-width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+    Google Photo 分享網址：<input id="shareUrl">
+    <select id="select">
+        <option value="2400" selected>2400</option>
+        <option value="1800">1800</option>
+        <option value="1200">1200</option>
+        <option value="800">800</option>
+        <option value="640">640</option>
+        <option value="480">480</option>
+        <option value="320">320</option>
+    </select>
+    <button id="send">轉換</button>
+    </div>
+    <div id="d"></div>
+    
+</body>
+<script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+<script>
+    var $shareUrl = $('#shareUrl');
+    var $select = $('#select');
+    var $send = $('#send');
+    var $d = $('#d');
+    var uri = 'https://script.google.com/macros/s/AKfycbxkuliMwhs78b3CeGRtAmlgflLKkVsD49nqvB2_Xjx9H3O9AsML/exec';
+    $send.on('click',function(){
+        let imageUrl = $('#shareUrl').val();
+        let imageSize = $('#select').val();
+        $.post(uri,{image:imageUrl,size:imageSize},function(e){
+            $d.html('<img src="'+e+'"/>');
+        });
+    })
+</script>
+</html>
