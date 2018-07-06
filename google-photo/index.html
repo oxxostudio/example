@@ -1,65 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Google Photo's Url</title>
     <style>
-        html,body{
-            margin:0;
-            padding:0;
-            font-size:15px;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
         }
-        select, button{
-            font-size:15px;
+
+        select,
+        button {
+            font-size: 15px;
         }
-        #shareUrl{
-            width:400px;
-            padding:3px 5px;
-            font-size:15px;
+
+        #shareUrl {
+            width: 400px;
+            padding: 3px 5px;
+            font-size: 15px;
         }
-        div{
+
+        div {
             box-sizing: border-box;
-            margin:0;
-            padding:20px 20px 0;
-            max-width:100%;
+            margin: 0;
+            padding: 20px 20px 0;
+            max-width: 100%;
         }
-        #d img{
-            max-width:100%;
+
+        .sizeBtn{
+            display:inline-block;
+            border:1px solid #ccc;
+            padding:3px 5px;
+            cursor:pointer; 
+            transition:.3s;
+        }
+
+        .sizeBtn.selected{
+            background:#ddd;
+        }
+
+        .sizeBtn:hover{
+            background:#ddd;
+        }
+
+        #d img {
+            max-width: 100%;
+            border:1px solid #000;
         }
     </style>
 </head>
+
 <body>
     <div>
-    Google Photo 分享網址：<input id="shareUrl">
-    <select id="select">
-        <option value="2400" selected>2400</option>
-        <option value="1800">1800</option>
-        <option value="1200">1200</option>
-        <option value="800">800</option>
-        <option value="640">640</option>
-        <option value="480">480</option>
-        <option value="320">320</option>
-    </select>
-    <button id="send">轉換</button>
+        Google Photo 分享網址：
+        <input id="shareUrl">
+        <button id="send">轉換</button>
+    </div>
+    <div>
+        <span data-size="2400" class="sizeBtn">2400</span>
+        <span data-size="1800" class="sizeBtn">1800</span>
+        <span data-size="1200" class="sizeBtn">1200</span>
+        <span data-size="800" class="sizeBtn default">800</span>
+        <span data-size="640" class="sizeBtn">640</span>
+        <span data-size="480" class="sizeBtn">480</span>
+        <span data-size="320" class="sizeBtn">320</span>
     </div>
     <div id="d"></div>
-    
+
 </body>
 <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
 <script>
     var $shareUrl = $('#shareUrl');
-    var $select = $('#select');
+    var $sizeBtn = $('.sizeBtn');
     var $send = $('#send');
     var $d = $('#d');
-    var uri = 'https://script.google.com/macros/s/AKfycbxkuliMwhs78b3CeGRtAmlgflLKkVsD49nqvB2_Xjx9H3O9AsML/exec';
-    $send.on('click',function(){
-        let imageUrl = $('#shareUrl').val();
-        let imageSize = $('#select').val();
-        $.post(uri,{image:imageUrl,size:imageSize},function(e){
-            $d.html('<img src="'+e+'"/>');
+    if(localStorage.googleImgPath){
+        $shareUrl.val(localStorage.googleImgPath);
+    }
+    var uri = 'https://script.google.com/macros/s/AKfycbxDAJN26VIKr9jLmeeTc0CwkOPINEnRf8J3Bu0ima_Ir5LYvBfB/exec';
+    $send.on('click', function () {
+        let imgPath = $('#shareUrl').val();
+        let imgSize = 800;
+        let imgUrl;
+        localStorage.googleImgPath = imgPath;
+        $.post(uri, { image: imgPath }, function (e) {
+            imgUrl = e;
+            $('.default').addClass('selected');
+            $d.html('<img id="googlePhoto" src="' + imgUrl  + '=w' + imgSize + '"/>');
         });
-    })
+
+        $sizeBtn.on('click',function(){
+            $sizeBtn.removeClass('selected');
+            $(this).addClass('selected');
+            let newSize = $(this).attr('data-size');
+            $('#googlePhoto').attr('src',imgUrl + '=w' + newSize);
+        })
+    });
+
+
 </script>
+
 </html>
