@@ -227,7 +227,6 @@
 
     if (param) {
         database.ref(param).on('value', function (snapshot) {
-            console.log(snapshot.val());
             let text = snapshot.val().md;
             $md.val(text);
             convert(text);
@@ -248,6 +247,17 @@
             md: text
         });
         window.history.pushState({}, 0, origin+'#'+write.key);
+        $save.text('已儲存');
+        setTimeout(()=>{
+            $save.text('儲存並產生連結');
+        },1000);
+    });
+
+    $copy.on('click',()=>{
+        $copy.text('已複製');
+        setTimeout(()=>{
+            $copy.text('複製 HTML 代碼');
+        },1000);
     });
 
     $md.on('keyup', () => {
