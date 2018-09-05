@@ -21,19 +21,48 @@
             box-sizing: border-box;
             font-size: 16px;
             color: #000;
+            transition: .3s;
         }
 
         header {
             height: 60px;
+            background: #000;
         }
 
         header h1 {
+            float: left;
             height: 100%;
+            width: 300px;
             text-align: center;
-            color: #fff;
-            background: #333;
+            color: #000;
+            background: #fc0;
             font-size: 20px;
             line-height: 60px;
+        }
+
+        .menu {
+            float: right;
+            margin: 13px 5px 0;
+            height: 40px;
+        }
+
+        .menu div {
+            float: left;
+            height: 34px;
+            line-height: 30px;
+            text-align: center;
+            background: #666;
+            color: #fff;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 14px;
+            border-radius: 5px;
+            width: 130px;
+        }
+
+        .menu div:hover {
+            background: #fc0;
+            color: #000;
         }
 
         body>div {
@@ -41,66 +70,47 @@
             width: 60%;
             height: calc(100% - 60px);
             vertical-align: top;
-            padding: 10px 20px;
-        }
-
-        body>div:first-of-type {
-            width: 40%;
         }
 
         body>div * {
             width: 100%;
-            transition: .3s;
+        }
+
+        .edit {
+            width: 40%;
+            border-right: 1px dashed #aaa;
         }
 
         body>div>h2 {
             font-size: 18px;
-            height: 40px;
             text-align: center;
+            width: 100%;
+            max-width: 250px;
+            margin: 20px auto;
+            border-bottom: 3px solid #fc0;
+            padding-bottom: 5px;
+        }
+
+        .edit h2 {
+            border-color: #000;
         }
 
         textarea {
-            height: calc(100% - 90px);
+            height: calc(100% - 80px);
             resize: none;
-            padding: 10px;
-            border-color: #aaa;
+            padding: 20px 30px;
+            border: none;
             line-height: 24px;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         textarea:focus {
             outline: none;
         }
 
-        .menu {
-            margin: 5px 0;
-            height: 40px;
-        }
-
-        .menu div {
-            float: left;
-            height: 100%;
-            width: calc(50% - 5px);
-            text-align: center;
-            margin: 0 0 0 5px;
-            background: #666;
-            line-height: 40px;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        .menu div:first-of-type {
-            margin: 0 5px 0 0;
-        }
-
-        .menu div:hover {
-            background: #000;
-        }
-
         .preview {
-            height: calc(100% - 40px);
-            padding: 10px;
-            border-top: 1px solid #ccc;
+            height: calc(100% - 80px);
+            padding: 20px 30px;
             overflow-y: auto;
         }
 
@@ -109,7 +119,7 @@
             height: 1px;
             overflow: hidden;
             position: fixed;
-            top: -10px;
+            top: -1000px;
             white-space: pre-wrap;
         }
     </style>
@@ -117,18 +127,18 @@
 
 <body>
     <header>
-        <h1>轉換 Markdown 為 HTML</h1>
-    </header>
-    <div>
-        <h2>Markdown</h2>
-        <textarea class="md"></textarea>
+        <h1>轉換吧！Markdown！</h1>
         <div class="menu">
             <div class="save">儲存並產生連結</div>
-            <div class="copy" data-clipboard-target=".clipboard">複製 HTML 代碼</div>
+            <div class="copy" data-clipboard-target=".clipboard">複製 HTML</div>
         </div>
+    </header>
+    <div class="edit">
+        <h2>在這裡寫 Markdown</h2>
+        <textarea class="md"></textarea>
     </div>
-    <div>
-        <h2>Preview</h2>
+    <div class="show">
+        <h2>在這裡預覽畫面</h2>
         <div class="preview "></div>
     </div>
     <div class="clipboard "></div>
@@ -246,18 +256,18 @@
             time: t,
             md: text
         });
-        window.history.pushState({}, 0, origin+'#'+write.key);
+        window.history.pushState({}, 0, origin + '#' + write.key);
         $save.text('已儲存');
-        setTimeout(()=>{
+        setTimeout(() => {
             $save.text('儲存並產生連結');
-        },1000);
+        }, 1000);
     });
 
-    $copy.on('click',()=>{
+    $copy.on('click', () => {
         $copy.text('已複製');
-        setTimeout(()=>{
-            $copy.text('複製 HTML 代碼');
-        },1000);
+        setTimeout(() => {
+            $copy.text('複製 HTML');
+        }, 1000);
     });
 
     $md.on('keyup', () => {
