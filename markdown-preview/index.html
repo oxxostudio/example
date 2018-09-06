@@ -31,7 +31,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js "></script>
 <script src="https://code.jquery.com/jquery-3.0.0.js "></script>
 <script src="clipboard.min.js "></script>
-<script src="https://www.gstatic.com/firebasejs/5.4.1/firebase.js "></script>
+<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
 <script>
 
     const pageUrl = location.href;
@@ -52,7 +52,6 @@
     };
     firebase.initializeApp(config);
     const database = firebase.database();
-
     $.ajax({
         url: "style-shopline.css",
         dataType: "text",
@@ -78,14 +77,16 @@
         $save.on('click', () => {
             let text = $md.val();
             let d = new Date();
-            let t = d.getTime();
+            let t1 = d.getTime();
+            let t2 = d.toString();
             let write = database.ref('/').push({
-                time: t,
+                time: t1,
+                date: t2,
                 md: text
             });
             window.history.pushState({}, 0, origin + '#' + write.key);
             $save.text('已儲存');
-            setTimeout(() => {
+            setTimeout(() => {  
                 $save.text('儲存並產生連結');
             }, 1000);
         });
