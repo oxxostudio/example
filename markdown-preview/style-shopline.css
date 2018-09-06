@@ -1,0 +1,109 @@
+.md-content {
+    position:relative;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width:100%;
+}
+.md-content * {
+    padding: 0;
+    margin: 0;
+    position:relative;
+    box-sizing: border-box;
+    font-size: 17px;
+    color: #000;
+    line-height: 30px;
+    font-family: "Lato";
+    letter-spacing: 0;
+}
+
+.md-content h1 {
+    font-size: 28px;
+    margin: 20px 0 15px;
+    text-transform: none;
+    font-weight: bold;
+}
+
+.md-content h2 {
+    font-size: 24px;
+    margin: 40px 0 10px;
+    padding: 30px 0 0;
+    border-top: 1px dashed #ddd;
+    text-transform: none;
+    font-weight: bold;
+}
+
+.md-content h3 {
+    font-size: 20px;
+    margin: 30px 0 5px;
+}
+
+.md-content hr {
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin: 20px 0;
+}
+
+.md-content p {
+    margin: 0 0 10px;
+}
+
+.md-content a {
+    color: #39c;
+}
+
+.md-content a:hover {
+    color: #5bf;
+}
+
+.md-content img {
+    width: auto;
+    max-width: 100%;
+    margin: 10px 0 20px;
+}
+
+.md-content em {
+    color: #f60;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.md-content ul {
+    padding: 10px 24px;
+}
+
+.md-content ul li {
+    margin: 0 0 2px;
+}
+
+.md-content blockquote {
+    background: #eee;
+    padding: 10px;
+    border-left: 5px solid #bbb;
+}
+
+.md-content code {
+    width: auto;
+    display: inline-block;
+    background: #fee;
+    color: #a00;
+    padding: 0 4px;
+    margin: 0 2px;
+}
+.md-content table{
+    border-spacing: 0;
+    border-collapse: collapse;
+    margin:20px 0 30px;
+    width: 100%;
+}
+.md-content table td,
+.md-content table th {
+    border: 1px solid #ccc;
+    text-align: center;
+    width: auto;
+    padding:5px;
+}
+
+.md-content table th{
+    background:#eee;
+}

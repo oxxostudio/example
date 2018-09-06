@@ -6,124 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>轉換吧！Markdown！- 轉換 Markdown 為 HTML</title>
-    <style>
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-        }
-
-        * {
-            position: relative;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-size: 16px;
-            color: #000;
-            transition: .3s;
-        }
-
-        header {
-            height: 60px;
-            background: #000;
-        }
-
-        header h1 {
-            float: left;
-            height: 100%;
-            width: 300px;
-            text-align: center;
-            color: #000;
-            background: #fc0;
-            font-size: 20px;
-            line-height: 60px;
-            font-style:italic;
-        }
-
-        .menu {
-            float: right;
-            margin: 13px 5px 0;
-            height: 40px;
-        }
-
-        .menu div {
-            float: left;
-            height: 34px;
-            line-height: 33px;
-            text-align: center;
-            background: #666;
-            color: #fff;
-            cursor: pointer;
-            margin: 0 5px;
-            font-size: 14px;
-            border-radius: 5px;
-            width: 130px;
-        }
-
-        .menu div:hover {
-            background: #fc0;
-            color: #000;
-        }
-
-        body>div {
-            float: left;
-            width: 60%;
-            height: calc(100% - 60px);
-            vertical-align: top;
-        }
-
-        body>div * {
-            width: 100%;
-        }
-
-        .edit {
-            width: 40%;
-            border-right: 1px dashed #aaa;
-        }
-
-        body>div>h2 {
-            font-size: 18px;
-            text-align: center;
-            width: 100%;
-            max-width: 250px;
-            margin: 20px auto;
-            border-bottom: 3px solid #fc0;
-            padding-bottom: 5px;
-        }
-
-        .edit h2 {
-            border-color: #000;
-        }
-
-        textarea {
-            height: calc(100% - 80px);
-            resize: none;
-            padding: 20px 30px;
-            border: none;
-            line-height: 24px;
-            font-size: 15px;
-        }
-
-        textarea:focus {
-            outline: none;
-            background:#fff;
-        }
-
-        .preview {
-            height: calc(100% - 80px);
-            padding: 20px 30px;
-            overflow-y: auto;
-        }
-
-        .clipboard {
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            position: fixed;
-            top: -1000px;
-            white-space: pre-wrap;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet" />
+    <link href="style-shopline.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -154,81 +38,14 @@
     const origin = pageUrl.split('#')[0];
     const param = pageUrl.split('#')[1];
     const $md = $('.md');
+    const $save = $('.save');
     const $copy = $('.copy');
     const $clipboard = $('.clipboard')
     const clipboard = new ClipboardJS('.copy');
     const $preview = $('.preview');
     const converter = new showdown.Converter();
     converter.setOption('openLinksInNewWindow', 'true');
-    const $save = $('.save');
-    const previewStyle = '<style>\n' +
-        '    .md-content *{\n' +
-        '        padding: 0;\n' +
-        '        margin: 0;\n' +
-        '        box-sizing: border-box;\n' +
-        '        font-size: 17px;\n' +
-        '        color: #000;\n' +
-        '        line-height: 30px;\n' +
-        '        font-family: "Lato ";\n' +
-        '        letter-spacing: 0;\n' +
-        '    }\n' +
-        '    .md-content h1{\n' +
-        '        font-size: 28px;\n' +
-        '        margin: 20px 0 15px;\n' +
-        '        text-transform: none;\n' +
-        '        font-weight: bold;\n' +
-        '    }\n' +
-        '    .md-content h2{\n' +
-        '        font-size: 24px;\n' +
-        '        margin: 40px 0 10px;\n' +
-        '        padding: 30px 0 0;\n' +
-        '        border-top: 1px dashed #ddd;\n' +
-        '        text-transform: none;\n' +
-        '        font-weight: bold;\n' +
-        '    }\n' +
-        '    .md-content h3{\n' +
-        '        font-size: 20px;\n' +
-        '        margin: 30px 0 5px;\n' +
-        '    }\n' +
-        '    .md-content p{\n' +
-        '        margin: 0 0 10px;\n' +
-        '    }\n' +
-        '    .md-content a{\n' +
-        '        color: #39c;\n' +
-        '    }\n' +
-        '    .md-content a:hover{\n' +
-        '        color: #5bf;\n' +
-        '    }\n' +
-        '    .md-content img{\n' +
-        '        width: auto;\n' +
-        '        max-width: 100%;\n' +
-        '        margin: 10px 0 20px;\n' +
-        '    }\n' +
-        '    .md-content em{\n' +
-        '        color: #f60;\n' +
-        '        font-weight: bold;\n' +
-        '        font-style: normal;\n' +
-        '    }\n' +
-        '    .md-content ul{\n' +
-        '        padding: 10px 24px;\n' +
-        '    }\n' +
-        '    .md-content ul li{\n' +
-        '        margin: 0 0 2px;\n' +
-        '    }\n' +
-        '    .md-content blockquote{\n' +
-        '        background: #eee;\n' +
-        '        padding: 10px;\n' +
-        '        border-left: 5px solid #bbb;\n' +
-        '    }\n' +
-        '    .md-content code{\n' +
-        '        width: auto;\n' +
-        '        display: inline-block;\n' +
-        '        background: #fee;\n' +
-        '        color: #a00;\n' +
-        '        padding: 0 4px;\n' +
-        '        margin: 0 2px;\n' +
-        '    }\n' +
-        '</style>\n';
+    converter.setOption('tables', 'true');
 
     const config = {
         databaseURL: "https://markdown-preview-f2020.firebaseio.com/"
@@ -236,52 +53,63 @@
     firebase.initializeApp(config);
     const database = firebase.database();
 
-    if (param) {
-        database.ref(param).on('value', function (snapshot) {
-            let text = snapshot.val().md;
-            $md.val(text);
-            convert(text);
-        });
-    } else {
-        if (localStorage.md2html) {
-            $md.val(localStorage.md2html);
-            convert(localStorage.md2html);
+    $.ajax({
+        url: "style-shopline.css",
+        dataType: "text",
+        success: function (css) {
+            main(css);
         }
+    });
+
+    function main(css) {
+        if (param) {
+            database.ref(param).on('value', function (snapshot) {
+                let text = snapshot.val().md;
+                $md.val(text);
+                convert(css, text);
+            });
+        } else {
+            if (localStorage.md2html) {
+                $md.val(localStorage.md2html);
+                convert(css, localStorage.md2html);
+            }
+        }
+
+        $save.on('click', () => {
+            let text = $md.val();
+            let d = new Date();
+            let t = d.getTime();
+            let write = database.ref('/').push({
+                time: t,
+                md: text
+            });
+            window.history.pushState({}, 0, origin + '#' + write.key);
+            $save.text('已儲存');
+            setTimeout(() => {
+                $save.text('儲存並產生連結');
+            }, 1000);
+        });
+
+        $copy.on('click', () => {
+            $copy.text('已複製');
+            setTimeout(() => {
+                $copy.text('複製 HTML');
+            }, 1000);
+        });
+
+        $md.on('keyup', () => {
+            let text = $md.val();
+            convert(css, text);
+            localStorage.md2html = text;
+            window.history.pushState({}, 0, origin);
+        });
     }
 
-    $save.on('click', () => {
-        let text = $md.val();
-        let d = new Date();
-        let t = d.getTime();
-        let write = database.ref('/').push({
-            time: t,
-            md: text
-        });
-        window.history.pushState({}, 0, origin + '#' + write.key);
-        $save.text('已儲存');
-        setTimeout(() => {
-            $save.text('儲存並產生連結');
-        }, 1000);
-    });
-
-    $copy.on('click', () => {
-        $copy.text('已複製');
-        setTimeout(() => {
-            $copy.text('複製 HTML');
-        }, 1000);
-    });
-
-    $md.on('keyup', () => {
-        let text = $md.val();
-        convert(text);
-        localStorage.md2html = text;
-        window.history.pushState({}, 0, origin);
-    });
-
-    function convert(e) {
+    function convert(css, e) {
         let html = converter.makeHtml(e);
-        $preview.html(previewStyle + '<div class="md-content ">\n' + html + '\n</div>');
-        $clipboard.text(previewStyle + '<div class="md-content ">\n' + html + '\n</div>');
+        let output = '<div class="md-content">\n' + html + '\n</div>';
+        $preview.html(output);
+        $clipboard.text('<style>\n' + css + '\n</style>\n' + output);
     }
 </script>
 
