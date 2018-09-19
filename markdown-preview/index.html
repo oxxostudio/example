@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>轉換吧！Markdown！- 轉換 Markdown 為 HTML</title>
-    <link href="style.css" rel="stylesheet" />
-    <link href="style-shopline.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/style-shopline.css" rel="stylesheet" />
+    <link href="css/style-kktix.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -16,6 +17,12 @@
         <div class="menu">
             <div class="save">儲存並產生連結</div>
             <div class="copy" data-clipboard-target=".clipboard">複製 HTML</div>
+            <div class="change">Style ( <i></i> )
+                <div>
+                    <b attr-css="style-shopline">shopline</b>
+                    <b attr-css="style-kktix">kktix</b>
+                </div>
+            </div>
         </div>
     </header>
     <div class="edit">
@@ -24,94 +31,136 @@
     </div>
     <div class="show">
         <h2>在這裡預覽畫面</h2>
-        <div class="preview "></div>
+        <div class="preview"></div>
     </div>
-    <div class="clipboard "></div>
+    <div class="clipboard"></div>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.8.6/showdown.js "></script>
-<script src="https://code.jquery.com/jquery-3.0.0.js "></script>
-<script src="clipboard.min.js "></script>
-<script src="https://www.gstatic.com/firebasejs/5.4.2/firebase.js"></script>
+<script src="js/showdown.js "></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/clipboard.min.js "></script>
+<script src="js/firebase.js"></script>
 <script>
+    $(() => {
+        const pageUrl = location.href;
+        const origin = pageUrl.split('#')[0];
+        const param = pageUrl.split('#')[1];
+        const $md = $('.md');
+        const $save = $('.save');
+        const $copy = $('.copy');
+        const $change = $('.change b');
+        const $styleName = $('.change i');
+        const $clipboard = $('.clipboard')
+        const clipboard = new ClipboardJS('.copy');
+        const $preview = $('.preview');
+        const converter = new showdown.Converter();
+        converter.setOption('openLinksInNewWindow', 'true');
+        converter.setOption('tables', 'true');
 
-    const pageUrl = location.href;
-    const origin = pageUrl.split('#')[0];
-    const param = pageUrl.split('#')[1];
-    const $md = $('.md');
-    const $save = $('.save');
-    const $copy = $('.copy');
-    const $clipboard = $('.clipboard')
-    const clipboard = new ClipboardJS('.copy');
-    const $preview = $('.preview');
-    const converter = new showdown.Converter();
-    converter.setOption('openLinksInNewWindow', 'true');
-    converter.setOption('tables', 'true');
+        const config = {
+            databaseURL: "https://markdown-preview-f2020.firebaseio.com/"
+        };
+        firebase.initializeApp(config);
+        const database = firebase.database();
 
-    const config = {
-        databaseURL: "https://markdown-preview-f2020.firebaseio.com/"
-    };
-    firebase.initializeApp(config);
-    const database = firebase.database();
-    $.ajax({
-        url: "style-shopline.css",
-        dataType: "text",
-        success: function (css) {
-            main(css);
+        let cssNum = 0;
+        let cssList = ['style-shopline', 'style-kktix'];
+        let nowCss = cssList[0];
+        let cssTemp = {};
+        cssList.forEach((e) => {
+            $.ajax({
+                url: 'css/' + e + '.css',
+                dataType: "text",
+                success: (css) => {
+                    cssTemp[e] = css;
+                    cssNum = cssNum + 1;
+                    if (cssNum == cssList.length) {
+                        main();
+                    }
+                }
+            });
+        });
+
+        function changeStyle(style) {
+            $('.md-content').removeClass(nowCss);
+            $('.change b').removeClass();
+            nowCss = style;
+            $('.md-content').addClass(nowCss);
+            convert(cssTemp[nowCss], $md.val(), nowCss);
+            $('.change b[attr-css="'+nowCss+'"]').addClass('selected');
+            $styleName.text(nowCss.replace('style-',''));
+        }
+
+        function main() {
+            if (param) {
+                database.ref(param).on('value', function (snapshot) {
+                    let text = snapshot.val().md;
+                    nowCss = snapshot.val().css || cssList[0];
+                    $md.val(text);
+                    convert(cssTemp[nowCss], text, nowCss);
+                    $('.change b[attr-css="'+nowCss+'"]').addClass('selected');
+                    $styleName.text(nowCss.replace('style-',''));
+                });
+            } else {
+                if (localStorage.md2html) {
+                    $md.val(localStorage.md2html);
+                    nowCss = localStorage.md2htmlCss || cssList[0];
+                    convert(cssTemp[nowCss], localStorage.md2html, nowCss);
+                    $('.change b[attr-css="'+nowCss+'"]').addClass('selected');
+                    $styleName.text(nowCss.replace('style-',''));
+                }else{
+                    $('.change b[attr-css="'+nowCss+'"]').addClass('selected');
+                    $styleName.text(nowCss.replace('style-',''));
+                }
+            }
+
+            $save.on('click', () => {
+                let text = $md.val();
+                let d = new Date();
+                let t1 = d.getTime();
+                let t2 = d.toString();
+                let write = database.ref('/').push({
+                    time: t1,
+                    date: t2,
+                    md: text,
+                    css: nowCss
+                });
+                window.history.pushState({}, 0, origin + '#' + write.key);
+                $save.text('已儲存');
+                setTimeout(() => {
+                    $save.text('儲存並產生連結');
+                }, 1000);
+            });
+
+            $copy.on('click', () => {
+                $copy.text('已複製');
+                setTimeout(() => {
+                    $copy.text('複製 HTML');
+                }, 1000);
+            });
+
+            $md.on('keyup', () => {
+                let text = $md.val();
+                convert(cssTemp[nowCss], text, nowCss);
+                localStorage.md2html = text;
+                localStorage.md2htmlCss = nowCss;
+                window.history.pushState({}, 0, origin);
+            });
+
+            $change.on('click', function(){
+                let cssName = $(this).attr('attr-css');
+                changeStyle(cssName);
+                localStorage.md2htmlCss = cssName;
+                window.history.pushState({}, 0, origin);
+            });
+        }
+
+        function convert(css, e, name) {
+            let html = converter.makeHtml(e);
+            let output = '<div class="md-content ' + name + '">\n' + html + '\n</div>';
+            $preview.html(output);
+            $clipboard.text('<style>\n' + css + '\n</style>\n' + output);
         }
     });
-
-    function main(css) {
-        if (param) {
-            database.ref(param).on('value', function (snapshot) {
-                let text = snapshot.val().md;
-                $md.val(text);
-                convert(css, text);
-            });
-        } else {
-            if (localStorage.md2html) {
-                $md.val(localStorage.md2html);
-                convert(css, localStorage.md2html);
-            }
-        }
-
-        $save.on('click', () => {
-            let text = $md.val();
-            let d = new Date();
-            let t1 = d.getTime();
-            let t2 = d.toString();
-            let write = database.ref('/').push({
-                time: t1,
-                date: t2,
-                md: text
-            });
-            window.history.pushState({}, 0, origin + '#' + write.key);
-            $save.text('已儲存');
-            setTimeout(() => {  
-                $save.text('儲存並產生連結');
-            }, 1000);
-        });
-
-        $copy.on('click', () => {
-            $copy.text('已複製');
-            setTimeout(() => {
-                $copy.text('複製 HTML');
-            }, 1000);
-        });
-
-        $md.on('keyup', () => {
-            let text = $md.val();
-            convert(css, text);
-            localStorage.md2html = text;
-            window.history.pushState({}, 0, origin);
-        });
-    }
-
-    function convert(css, e) {
-        let html = converter.makeHtml(e);
-        let output = '<div class="md-content">\n' + html + '\n</div>';
-        $preview.html(output);
-        $clipboard.text('<style>\n' + css + '\n</style>\n' + output);
-    }
 </script>
 
 </html>

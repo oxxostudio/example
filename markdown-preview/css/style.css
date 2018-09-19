@@ -17,6 +17,7 @@ body {
 header {
     height: 60px;
     background: #000;
+    z-index:99;
 }
 
 header h1 {
@@ -37,7 +38,7 @@ header h1 {
     height: 40px;
 }
 
-.menu div {
+.menu>div {
     float: left;
     height: 34px;
     line-height: 33px;
@@ -45,15 +46,56 @@ header h1 {
     background: #666;
     color: #fff;
     cursor: pointer;
-    margin: 0 5px;
+    margin: 0 3px;
     font-size: 14px;
     border-radius: 5px;
-    width: 130px;
+    padding:0 15px;
+}
+.menu>div i{
+    color:#fff;
+    font-style: normal;
 }
 
-.menu div:hover {
+.menu>div:hover {
     background: #fc0;
     color: #000;
+}
+.menu>div:hover i{
+    color: #000;
+}
+
+.change div{
+    position:absolute;
+    left:0;
+    display:none;
+    background: #fc0;
+    width:100%;
+    padding:8px 0;
+    border-radius: 5px;
+    border-top:2px solid #000;
+    box-shadow:rgba(0,0,0,.5) 0 3px 3px;
+}
+
+.change:hover div{
+    display:block;
+}
+
+.change div b{
+    display:block;
+    font-weight: normal;
+    opacity:.3;
+    height:30px;
+    line-height:30px;
+}
+
+.change div b.selected{
+    opacity:1;
+    color:#000;
+    pointer-events: none;
+}
+.change div b:hover{
+    opacity:1;
+    color:#000;
 }
 
 body>div {
