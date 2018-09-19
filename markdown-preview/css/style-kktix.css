@@ -118,6 +118,7 @@
 .md-content.style-kktix table {
     margin: 20px 0 30px;
     width: 100%;
+    max-width:640px;
     border-spacing: 0;
     border-collapse: collapse;
 }
@@ -138,5 +139,11 @@
     width:100%;
     max-width:600px;
     height:360px;
+    margin-bottom:20px;
+}
+
+.md-content.style-kktix .kktix-youtube-wrapper {
+    height:360px;
+    overflow: inherit;
     margin-bottom:20px;
 }
