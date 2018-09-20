@@ -34,66 +34,107 @@ header h1 {
 
 .menu {
     float: right;
-    margin: 13px 5px 0;
+    margin: 7px 12px 0;
     height: 40px;
 }
 
-.menu>div {
+.menu>a {
     float: left;
+    display:block;
+    padding:6px 0;
     height: 34px;
-    line-height: 33px;
+    width:28px;
     text-align: center;
-    background: #666;
     color: #fff;
     cursor: pointer;
-    margin: 0 3px;
-    font-size: 14px;
+    margin: 0 5px;
     border-radius: 5px;
-    padding:0 15px;
+    text-decoration: none;
 }
-.menu>div i{
+.menu>a:hover{
+    padding:0 0 12px;
+}
+
+.menu>a>i{
     color:#fff;
     font-style: normal;
+    font-size:28px;
+}
+.menu>a:hover>i{
+    color: #fc0;
 }
 
-.menu>div:hover {
-    background: #fc0;
-    color: #000;
-}
-.menu>div:hover i{
-    color: #000;
-}
 
-.change div{
+.menu>a span{
     position:absolute;
+    display:block;
+    width:200px;
+    left:-86px;
+    text-align: center;
+    pointer-events: none;
+    bottom:-22px;
+    height:0;
+    overflow: hidden;
+}
+.menu>a:hover span{
+    color:#fff; 
+    height:22px;
+}
+.menu>a span i{
+    display:inline-block;
+    color:#000; 
+    font-size:12px;
+    font-style: normal;
+    padding:2px 8px 0;
+    background:#fff;
+    overflow: hidden;
+    height:100%;
+    border-radius:10px 10px 0 0;
+}
+
+.change>div{
+    position:absolute;
+    top:0;
     left:0;
     display:none;
-    background: #fc0;
     width:100%;
-    padding:8px 0;
+    padding:50px 0 0;
     border-radius: 5px;
     border-top:2px solid #000;
-    box-shadow:rgba(0,0,0,.5) 0 3px 3px;
 }
 
-.change:hover div{
+.change:hover>div{
     display:block;
 }
 
-.change div b{
+.change>div div{
+    opacity:0;
+    border:1px dashed #999;
+    transition:.3s;
+    width:100px;
+    margin-left:-36px;
+    border-radius:5px;
+}
+
+.change>div:hover div{
+    margin-top:10px;
+    opacity:1;
+    padding:5px 0;
+}
+
+.change>div div b{
     display:block;
-    font-weight: normal;
     opacity:.3;
     height:30px;
     line-height:30px;
 }
 
-.change div b.selected{
+.change>div b.selected{
     opacity:1;
     color:#000;
     pointer-events: none;
 }
-.change div b:hover{
+.change>div b:hover{
     opacity:1;
     color:#000;
 }
