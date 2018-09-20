@@ -23,8 +23,9 @@
                 <span><i>切換樣式</i></span>
                 <div>
                     <div>
-                        <b attr-css="style-shopline">shopline</b>
+                        <b attr-css="style-shopline">預設</b>
                         <b attr-css="style-kktix">kktix</b>
+                        <b attr-css="none">無樣式</b>
                     </div>
                 </div>
             </a>
@@ -91,8 +92,12 @@
             $('.md-content').removeClass(nowCss);
             $('.change b').removeClass();
             nowCss = style;
-            $('.md-content').addClass(nowCss);
-            convert(cssTemp[nowCss], $md.val(), nowCss);
+            if (nowCss == 'none') {
+                convert(false, $md.val(), 'none');
+            } else {
+                $('.md-content').addClass(nowCss);
+                convert(cssTemp[nowCss], $md.val(), nowCss);
+            }
             $('.change b[attr-css="' + nowCss + '"]').addClass('selected');
         }
 
@@ -102,7 +107,12 @@
                     let text = snapshot.val().md;
                     nowCss = snapshot.val().css || cssList[0];
                     $md.val(text);
-                    convert(cssTemp[nowCss], text, nowCss);
+                    if (nowCss == 'none') {
+                        convert(false, $md.val(), 'none');
+                    } else {
+                        $('.md-content').addClass(nowCss);
+                        convert(cssTemp[nowCss], $md.val(), nowCss);
+                    }
                     $('.change b[attr-css="' + nowCss + '"]').addClass('selected');
                 });
             } else {
@@ -114,7 +124,12 @@
                         let contentCss = localStorage.md2htmlCss;
                         $md.val(content);
                         nowCss = contentCss || cssList[0];
-                        convert(cssTemp[nowCss], content, nowCss);
+                        if (nowCss == 'none') {
+                            convert(false, $md.val(), 'none');
+                        } else {
+                            $('.md-content').addClass(nowCss);
+                            convert(cssTemp[nowCss], $md.val(), nowCss);
+                        }
                         $('.change b[attr-css="' + nowCss + '"]').addClass('selected');
                     } else {
                         $('.change b[attr-css="' + nowCss + '"]').addClass('selected');
@@ -175,7 +190,11 @@
             let html = converter.makeHtml(e);
             let output = '<div class="md-content ' + name + '">\n' + html + '\n</div>';
             $preview.html(output);
-            $clipboard.text('<style>\n' + css + '\n</style>\n' + output);
+            if (css) {
+                $clipboard.text('<style>\n' + css + '\n</style>\n' + output);
+            } else {
+                $clipboard.text(html);
+            }
         }
     });
 </script>
