@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>列印兌換卷</title>
+  <style>
+    @media print,
+      screen {
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: #ccc;
+            font-family: Verdana;
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-style: normal;
+            font-family: Arial, "Heiti TC", "Microsoft JhengHei", sans-serif;
+        }
+        #file{
+          position:fixed;
+          top:-999px;
+          left:0;
+        }
+        #fileIcon{
+          position:relative;
+          display:block;
+          width:128px;
+          margin:100px auto;
+          cursor:pointer;
+          opacity:.6;
+          transition:.3s;
+        }
+        #fileIcon img{
+          width:100%;
+        }
+        #fileIcon::after{
+          content:'上傳檔案';
+          font-weight:bold;
+          display:block;
+          padding-top:10px;
+          font-size:20px;
+          text-align:center;
+        }
+        #fileIcon.used{
+          position:fixed;
+          top:10px;
+          right:15px;
+          width:40px;
+          margin:0;
+        }
+        #fileIcon.used::after{
+          display:none;
+        }
+        #fileIcon:hover{
+          opacity:1;
+        }
+        .print {
+            margin:0 auto;
+            padding: 12mm 3mm 11mm 6.5mm;
+            width: 100%;
+            max-width: 210mm;
+            background: #fff;
+        }
+
+        .print span {
+            width: 30.55mm;
+            height: 16.95mm;
+            display: inline-block;
+            margin: 0 1.15mm;
+            font-size: 14px;
+            padding-top: 2.5mm;
+            text-align: center;
+            vertical-align: top;
+            overflow: hidden;
+            text-align: center;
+        }
+        .print span i {
+            width: 100%;
+            display: block;
+            font-size: 12px;
+            height: 4.5mm;
+        }
+        .print span b {
+            width: 100%;
+            display: block;
+            font-size: 15px;
+            height: 5mm;
+        }
+        .print span em {
+            width: 100%;
+            display: block;
+            font-size: 12px;
+            height: 5mm;
+            color:#aaa;
+            transform: scale(.65) translateX(5mm) translateY(0.5mm);
+            text-align: right;
+        }
+      }
+      @media print{
+        html,body{
+          background:#fff;
+        }
+        #file {
+          display:none;
+        }
+        #content{
+          width:100%;
+          height:100%;
+        }
+      }
+  </style>
+</head>
+
+<body>
+  <input id="file" type="file" />
+  <div id="fileIcon"><img src="upload-arrow.png"></div>
+  <div id="content"></div>
+  <script>
+    const file = document.getElementById('file');
+    const fileIcon = document.getElementById('fileIcon');
+    const content = document.getElementById('content');
+    fileIcon.addEventListener('click', function () {
+      file.click();
+    });
+    file.onchange = change;
+
+    function change(e) {
+      if (e.target.files[0]) {
+        content.innerHTML = '';
+        fileIcon.className = 'used';
+        let fileReader = new FileReader();
+        let files = e.target.files[0];
+        let arr = [];
+        fileReader.onloadend = () => {
+          let fileContent = fileReader.result;
+          let source = fileContent.split(/\n/);
+          source.forEach((e, i) => {
+            arr[i] = e.split(',');
+          })
+          let num = Math.ceil(source.length / 96);
+          for (let i = 0; i < num; i++) {
+            content.innerHTML = content.innerHTML + '<div class="print"></div><p style="page-break-after:always"></p>';
+          }
+          let print = document.querySelectorAll('.print');
+          arr.forEach((e, i) => {
+            let pos = Math.floor(i / 96);
+            print[pos].innerHTML = print[pos].innerHTML + '<span><i>' + e[2] + '</i><b>' + e[1] + '</b><em>' + e[0] + '</em></span>';
+          });
+        }
+        fileReader.readAsText(files);
+      }
+    };
+
+  </script>
+</body>
+
+</html>
