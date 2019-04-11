@@ -17,6 +17,9 @@
       padding: 0;
       background: #333;
     }
+    body{
+      padding-top:50px;
+    }
 
     body * {
       position: relative;
@@ -36,6 +39,7 @@
       margin: 10px auto;
       color: #ccc;
       opacity: .2;
+      user-select: none;
     }
 
     .btn.connect {
@@ -71,31 +75,31 @@
     power.addEventListener("click", function () {
       irled.send('61d6807f');
     });
-    power.addEventListener("touchstart", function () {
+    power.addEventListener("touchend", function () {
       irled.send('61d6807f');
     });
     a1.addEventListener("click", function () {
       irled.send('61d6a05f');
     });
-    a1.addEventListener("touchstart", function () {
+    a1.addEventListener("touchend", function () {
       irled.send('61d6a05f');
     });
     a2.addEventListener("click", function () {
       irled.send('61d6e01f');
     });
-    a2.addEventListener("touchstart", function () {
+    a2.addEventListener("touchend", function () {
       irled.send('61d6e01f');
     });
     b1.addEventListener("click", function () {
       irled.send('61d6e817');
     });
-    b1.addEventListener("touchstart", function () {
+    b1.addEventListener("touchend", function () {
       irled.send('61d6e817');
     });
     b2.addEventListener("click", function () {
       irled.send('61d618e7');
     });
-    b2.addEventListener("touchstart", function () {
+    b2.addEventListener("touchend", function () {
       irled.send('61d618e7');
     });
   });
