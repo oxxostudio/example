@@ -8,114 +8,133 @@
   <title>列印兌換卷</title>
   <style>
     @media print,
-      screen {
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            background: #ccc;
-            font-family: Verdana;
-        }
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            font-style: normal;
-            font-family: Arial, "Heiti TC", "Microsoft JhengHei", sans-serif;
-        }
-        #file{
-          position:fixed;
-          top:-999px;
-          left:0;
-        }
-        #fileIcon{
-          position:relative;
-          display:block;
-          width:128px;
-          margin:100px auto;
-          cursor:pointer;
-          opacity:.6;
-          transition:.3s;
-        }
-        #fileIcon img{
-          width:100%;
-        }
-        #fileIcon::after{
-          content:'上傳檔案';
-          font-weight:bold;
-          display:block;
-          padding-top:10px;
-          font-size:20px;
-          text-align:center;
-        }
-        #fileIcon.used{
-          position:fixed;
-          top:10px;
-          right:15px;
-          width:40px;
-          margin:0;
-        }
-        #fileIcon.used::after{
-          display:none;
-        }
-        #fileIcon:hover{
-          opacity:1;
-        }
-        .print {
-            margin:0 auto;
-            padding: 12mm 3mm 11mm 6.5mm;
-            width: 100%;
-            max-width: 210mm;
-            background: #fff;
-        }
+    screen {
 
-        .print span {
-            width: 30.55mm;
-            height: 16.95mm;
-            display: inline-block;
-            margin: 0 1.15mm;
-            font-size: 14px;
-            padding-top: 2.5mm;
-            text-align: center;
-            vertical-align: top;
-            overflow: hidden;
-            text-align: center;
-        }
-        .print span i {
-            width: 100%;
-            display: block;
-            font-size: 12px;
-            height: 4.5mm;
-        }
-        .print span b {
-            width: 100%;
-            display: block;
-            font-size: 15px;
-            height: 5mm;
-        }
-        .print span em {
-            width: 100%;
-            display: block;
-            font-size: 12px;
-            height: 5mm;
-            color:#aaa;
-            transform: scale(.65) translateX(5mm) translateY(0.5mm);
-            text-align: right;
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background: #ccc;
+        font-family: Verdana;
       }
-      @media print{
-        html,body{
-          background:#fff;
-        }
-        #file, #fileIcon {
-          display:none;
-        }
-        #content{
-          width:100%;
-          height:100%;
-        }
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-style: normal;
+        font-family: Arial, "Heiti TC", "Microsoft JhengHei", sans-serif;
       }
+
+      #file {
+        position: fixed;
+        top: -999px;
+        left: 0;
+      }
+
+      #fileIcon {
+        position: relative;
+        display: block;
+        width: 128px;
+        margin: 100px auto;
+        cursor: pointer;
+        opacity: .6;
+        transition: .3s;
+      }
+
+      #fileIcon img {
+        width: 100%;
+      }
+
+      #fileIcon::after {
+        content: '上傳檔案';
+        font-weight: bold;
+        display: block;
+        padding-top: 10px;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      #fileIcon.used {
+        position: fixed;
+        top: 10px;
+        right: 15px;
+        width: 40px;
+        margin: 0;
+      }
+
+      #fileIcon.used::after {
+        display: none;
+      }
+
+      #fileIcon:hover {
+        opacity: 1;
+      }
+
+      .print {
+        margin: 0 auto;
+        padding: 12mm 3mm 11mm 6.5mm;
+        width: 100%;
+        max-width: 210mm;
+        background: #fff;
+      }
+
+      .print span {
+        width: 30.55mm;
+        height: 16.95mm;
+        display: inline-block;
+        margin: 0 1.15mm;
+        font-size: 14px;
+        padding-top: 2.5mm;
+        text-align: center;
+        vertical-align: top;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .print span i {
+        width: 100%;
+        display: block;
+        font-size: 12px;
+        height: 4.5mm;
+      }
+
+      .print span b {
+        width: 100%;
+        display: block;
+        font-size: 15px;
+        height: 5mm;
+      }
+
+      .print span em {
+        width: 100%;
+        display: block;
+        font-size: 12px;
+        height: 5mm;
+        color: #aaa;
+        transform: scale(.65) translateX(5mm) translateY(0.5mm);
+        text-align: right;
+      }
+    }
+
+    @media print {
+
+      html,
+      body {
+        background: #fff;
+      }
+
+      #file,
+      #fileIcon {
+        display: none;
+      }
+
+      #content {
+        width: 100%;
+        height: 100%;
+      }
+    }
   </style>
 </head>
 
@@ -133,6 +152,15 @@
     file.onchange = change;
 
     function change(e) {
+      const t = new Date();
+      let m = t.getMonth() + 1;
+      if (m < 9) { m = `0${m}`; }
+      let d = t.getDate();
+      if (d < 9) { d = `0${d}`; }
+      let w = String.fromCharCode(65 + Math.ceil(Math.random() * 25));
+      let ac = `${Math.floor(Math.random() * 10)}`;
+      const rn = `${m}${d}.${w}${ac}`;
+      console.log(rn);
       if (e.target.files[0]) {
         content.innerHTML = '';
         fileIcon.className = 'used';
@@ -143,8 +171,11 @@
           let fileContent = fileReader.result;
           let source = fileContent.split(/\n/);
           source.forEach((e, i) => {
-            arr[i] = e.split(',');
-          })
+            if (i > 0) {
+              arr[i - 1] = e.split(',');
+            }
+          });
+          console.log(arr);
           let num = Math.ceil(source.length / 96);
           for (let i = 0; i < num; i++) {
             content.innerHTML = content.innerHTML + '<div class="print"></div><p style="page-break-after:always"></p>';
@@ -152,7 +183,15 @@
           let print = document.querySelectorAll('.print');
           arr.forEach((e, i) => {
             let pos = Math.floor(i / 96);
-            print[pos].innerHTML = print[pos].innerHTML + '<span><i>' + e[2] + '</i><b>' + e[1] + '</b><em>' + e[0] + '</em></span>';
+            let n;
+            if (i <= 9) {
+              n = '00' + i;
+            } else if (i > 9 && i <= 99) {
+              n = '0' + i;
+            } else {
+              n = i;
+            }
+            print[pos].innerHTML = print[pos].innerHTML + '<span><i>' + e[1] + '</i><b>' + e[0] + '</b><em>' + rn + '.' + n + '</em></span>';
           });
         }
         fileReader.readAsText(files);
