@@ -34,43 +34,51 @@
         outline: none;
         border: 1px solid #aaa;
         border-radius: 3px;
-        padding: 5px 10px;
-        background:#eee;
+        padding: 5px 15px;
+        background: #eee;
+        margin: 5px 3px 0;
+        cursor: pointer;
       }
-      button:focus{
-        background:#ddd;
-      }
-      #urlInput{
-        display:block;
-        width:100%;
-        outline: none;
-        border:1px solid #aaa;
-        margin:10px 0;
-        border-radius: 5px;;
-        padding:5px;
-      }
-      #urlInput:focus{
-        border:1px solid #000;
+      button:focus {
+        background: #ddd;
       }
       .outside {
         display: inline-block;
         width: calc(50% - 20px);
         max-height: calc(100% - 20px);
-        min-width: 400px;
         vertical-align: top;
-        padding-bottom:20px;
+        padding-bottom: 20px;
         text-align: center;
+      }
+      @media (max-width: 640px) {
+        .outside {
+          margin-left: 10px;
+          width: calc(100% - 20px);
+        }
+      }
+      @media (max-width: 640px) {
+        .yt {
+          height: calc(50vh - 30px);
+        }
       }
       .show {
         text-align: left;
         margin-left: 10px;
-        padding: 10px 10px 50px;
+        padding: 10px 20px 50px;
         overflow-y: auto;
         border: 1px solid #ccc;
       }
+      @media (max-width: 640px) {
+        .show {
+          height: calc(50vh + 10px);
+        }
+        .show span {
+          font-size: 1.2rem;
+          line-height: 1.8;
+        }
+      }
       .show span {
         cursor: pointer;
-        padding: 0 10px;
       }
       .show span:hover {
         background: #eee;
@@ -85,7 +93,7 @@
     </style>
   </head>
   <body>
-    <div class="outside">
+    <div class="outside yt">
       <div id="player"></div>
       <button id="playBtn">Play</button>
       <button id="pauseBtn">Pause</button>
@@ -94,18 +102,23 @@
     <div class="outside show"></div>
   </body>
   <script>
-    const hash = location.hash.replace('#','');
+    const hash = location.hash.replace("#", "");
     const playBtn = document.getElementById("playBtn");
     const pauseBtn = document.getElementById("pauseBtn");
     const stopBtn = document.getElementById("stopBtn");
     const show = document.querySelector(".show");
+    const yt = document.querySelector(".yt");
+    const yt_width = yt.offsetWidth;
 
     var player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player("player", {
-        height: "390",
+        height: (yt_width / 16) * 9,
         width: "100%",
-        videoId: hash
+        videoId: hash,
+        playerVars: {
+          playsinline: 1,
+        },
       });
     }
 
@@ -114,7 +127,7 @@
     let vt;
     playBtn.addEventListener("click", videoPlay);
 
-    function videoPlay(){
+    function videoPlay() {
       clearInterval(vt);
       vt = setInterval(() => {
         sec = ~~player.getCurrentTime();
