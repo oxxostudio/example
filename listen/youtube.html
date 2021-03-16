@@ -36,7 +36,7 @@
         border-radius: 3px;
         padding: 5px 15px;
         background: #eee;
-        margin: 5px 3px 0;
+        margin: 5px 1px 0;
         cursor: pointer;
       }
       button:focus {
@@ -64,7 +64,7 @@
       .show {
         text-align: left;
         margin-left: 10px;
-        padding: 10px 20px 50px;
+        padding: 10px 15px 50px;
         overflow-y: auto;
         border: 1px solid #ccc;
       }
@@ -72,13 +72,11 @@
         .show {
           height: calc(50vh + 10px);
         }
-        .show span {
-          font-size: 1.2rem;
-          line-height: 1.8;
-        }
       }
       .show span {
         cursor: pointer;
+        display:block;
+        padding:5px;
       }
       .show span:hover {
         background: #eee;
@@ -89,6 +87,13 @@
       }
       .show span.read:hover {
         background: #fdd;
+      }
+      @media (max-width: 640px) {
+        .show span {
+          font-size: 1.2rem;
+          line-height: 1;
+          padding:10px 5px;
+        }
       }
     </style>
   </head>
@@ -166,7 +171,7 @@
             start = sa[0] * 3600 + sa[1] * 60 + sa[2] * 1;
             let ea = e.split("--> ")[1].split(",")[0].split(":");
             obj[start] = source[i + 1];
-            content = `${content}<span class="s${start}" time="${start}">${source[i + 1]}</span><br/>`;
+            content = `${content}<span class="s${start}" time="${start}">${source[i + 1]}</span>`;
           }
         });
         show.innerHTML = content;
