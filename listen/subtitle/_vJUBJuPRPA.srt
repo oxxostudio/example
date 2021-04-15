@@ -12,7 +12,7 @@ so
 
 4
 00:00:28,400 --> 00:00:30,400
-hi everyone this is karen hey everybody
+hi everyone this is karen hey everybody 
 
 5
 00:00:30,400 --> 00:00:32,320
