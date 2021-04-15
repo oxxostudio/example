@@ -75,8 +75,8 @@
       }
       .show span {
         cursor: pointer;
-        display:block;
-        padding:5px;
+        display: block;
+        padding: 5px;
       }
       .show span:hover {
         background: #eee;
@@ -92,7 +92,7 @@
         .show span {
           font-size: 1.2rem;
           line-height: 1;
-          padding:10px 5px;
+          padding: 10px 5px;
         }
       }
     </style>
@@ -157,8 +157,20 @@
       player.stopVideo(1);
     });
 
+    const hash2 = {
+      _vJUBJuPRPA: "vJUBJuPRPA",
+    };
+
     let obj = {};
-    fetch(`subtitle/${hash}.srt`)
+    let srt = `${hash}.srt`;
+
+    for (let i in hash2) {
+      if (hash == i) {
+        srt = `${hash2[i]}.srt`;
+      }
+    }
+
+    fetch(`subtitle/${srt}`)
       .then((res) => {
         return res.text();
       })

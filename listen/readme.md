@@ -27,8 +27,8 @@
 - [6-2 我做得到！我是蝙蝠俠！2](https://example.oxxostudio.tw/listen/youtube.html#c00iVNLllEM)
 - [7-1 黃豆，你真是太神奇了！1](https://example.oxxostudio.tw/listen/youtube.html#_vJUBJuPRPA)
 - [7-2 黃豆，你真是太神奇了！2](https://example.oxxostudio.tw/listen/youtube.html#3Il9DHh96U4)
-- [9-1這些地理冷知識顛覆你的認知 1](https://example.oxxostudio.tw/listen/youtube.html#wAlhfqig25Y)
-- [9-2這些地理冷知識顛覆你的認知 2](https://example.oxxostudio.tw/listen/youtube.html#ECUzv5e-Gsg)
+- [9-1 這些地理冷知識顛覆你的認知 1](https://example.oxxostudio.tw/listen/youtube.html#wAlhfqig25Y)
+- [9-2 這些地理冷知識顛覆你的認知 2](https://example.oxxostudio.tw/listen/youtube.html#ECUzv5e-Gsg)
 
 ## 字幕轉換
 
