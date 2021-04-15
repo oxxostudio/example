@@ -29,6 +29,11 @@
 - [7-2 黃豆，你真是太神奇了！2](https://example.oxxostudio.tw/listen/youtube.html#3Il9DHh96U4)
 - [9-1 這些地理冷知識顛覆你的認知 1](https://example.oxxostudio.tw/listen/youtube.html#wAlhfqig25Y)
 - [9-2 這些地理冷知識顛覆你的認知 2](https://example.oxxostudio.tw/listen/youtube.html#ECUzv5e-Gsg)
+- [10-1 原子筆的歷史 1](https://example.oxxostudio.tw/listen/youtube.html#GGJFqN0Jbjk)
+- [10-1 原子筆的歷史 2](https://example.oxxostudio.tw/listen/youtube.html#ttQZTJv6G10)
+- [12-1 鴨嘴獸：不可思議的生物 1](https://example.oxxostudio.tw/listen/youtube.html#FPdUmTLaXto)
+- [12-1 鴨嘴獸：不可思議的生物 2](https://example.oxxostudio.tw/listen/youtube.html#cufn46gV67o)
+
 
 ## 字幕轉換
 
