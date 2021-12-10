@@ -23,6 +23,7 @@
         margin: 5px 5px 10px;
         padding: 10px;
         border: 1px solid #000;
+        font-size: 16px;
       }
       h1::selection,
       h2::selection {
@@ -43,8 +44,8 @@
       <option value="OK">OK</option>
       <option value="Hello">Hello</option>
     </select>
-    <h1 title="大標題">大標題</h1>
-    <h2 title="次標題">次標題</h2>
+    <h1 title="我是大標題">大標題</h1>
+    <h2 title="我是次標題">次標題</h2>
     <a href="https://www.google.com" target="_blank">我是超連結，點擊會開啟 Google 網站</a>
   </body>
   <script>
@@ -59,6 +60,14 @@
     });
     select.addEventListener("change", (e) => {
       show.innerHTML = e.target.value;
+    });
+    h1 = document.querySelector("h1")
+    h1.addEventListener("click", (e) => {
+      show.innerHTML = h1.innerText;
+    });
+    h2 = document.querySelector("h2")
+    document.querySelector("h2").addEventListener("click", (e) => {
+      show.innerHTML = h2.innerText;
     });
   </script>
 </html>
