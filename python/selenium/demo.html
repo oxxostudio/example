@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Selenium demo page</title>
+    <style>
+      body {
+        padding: 10px;
+      }
+      button,
+      select {
+        margin: 5px;
+        padding: 10px;
+        font-size: 16px;
+      }
+      #show {
+        box-sizing: content-box;
+        display: block;
+        width: 300px;
+        height: 100px;
+        margin: 5px 5px 10px;
+        padding: 10px;
+        border: 1px solid #000;
+      }
+      h1::selection,
+      h2::selection {
+        background: #ccc;
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="show"></textarea>
+    <button id="a">A ( id="a" )</button>
+    <button class="btn">B ( class="btn" )</button>
+    <button class="test">C ( class="test" )</button>
+    <button name="dog">D ( name="dog" )</button>
+    <select id="select">
+      <option value="OXXO">OXXO</option>
+      <option value="GKPen">GKPen</option>
+      <option value="OK">OK</option>
+      <option value="Hello">Hello</option>
+    </select>
+    <h1 title="大標題">大標題</h1>
+    <h2 title="次標題">次標題</h2>
+    <a href="https://www.google.com" target="_blank">我是超連結，點擊會開啟 Google 網站</a>
+  </body>
+  <script>
+    show = document.getElementById("show");
+    select = document.getElementById("select");
+    buttons = document.querySelectorAll("button");
+    buttons.forEach((e) => {
+      let text = e.innerText;
+      e.addEventListener("click", () => {
+        show.innerHTML = text;
+      });
+    });
+    select.addEventListener("change", (e) => {
+      show.innerHTML = e.target.value;
+    });
+  </script>
+</html>
