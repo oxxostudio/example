@@ -62,25 +62,25 @@
     buttons.forEach((e) => {
       let text = e.innerText;
       e.addEventListener("click", () => {
-        show.innerHTML = text;
+        show.value = text;
       });
     });
     select.addEventListener("change", (e) => {
-      show.innerHTML = e.target.value;
+      show.value = e.target.value;
     });
     h1 = document.querySelector("h1")
     h1.addEventListener("click", (e) => {
-      show.innerHTML = h1.innerText;
+      show.value = h1.innerText;
     });
     h2 = document.querySelector("h2")
     document.querySelector("h2").addEventListener("click", (e) => {
-      show.innerHTML = h2.innerText;
+      show.value = h2.innerText;
     });
     add = document.getElementById('add')
     let n = 0
     add.addEventListener('click',()=>{
       n = n + 1;
-      show.innerHTML = n
+      show.value = n
     })
   </script>
 </html>
