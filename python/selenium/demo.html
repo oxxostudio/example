@@ -44,6 +44,7 @@
     <button class="btn">B ( class="btn" )</button>
     <button class="test">C ( class="test" )</button>
     <button name="dog">D ( name="dog" )</button>
+    <button id="add">點擊增加數字</button>
     <select id="select">
       <option value="OXXO">OXXO</option>
       <option value="GKPen">GKPen</option>
@@ -75,5 +76,11 @@
     document.querySelector("h2").addEventListener("click", (e) => {
       show.innerHTML = h2.innerText;
     });
+    add = document.getElementById('add')
+    let n = 0
+    add.addEventListener('click',()=>{
+      n = n + 1;
+      show.innerHTML = n
+    })
   </script>
 </html>
