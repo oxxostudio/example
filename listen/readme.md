@@ -34,6 +34,10 @@
 - [12-1 鴨嘴獸：不可思議的生物 1](https://example.oxxostudio.tw/listen/youtube.html#FPdUmTLaXto)
 - [12-1 鴨嘴獸：不可思議的生物 2](https://example.oxxostudio.tw/listen/youtube.html#cufn46gV67o)
 
+## others
+
+- [沒有夢想、哪有人生？](https://example.oxxostudio.tw/listen/youtube.html#jR7ugtg5bag)
+
 
 ## 字幕轉換
 
